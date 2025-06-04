@@ -14,20 +14,22 @@
         <div id="canvas">
             <div id="form-body">
                 <h1 style="text-align: center; margin-bottom: 30px;">Login Form</h1>
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="username">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlInput2" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleFormControlInput2">
-                </div>
-                <div style="text-align: center; margin-top: 40px;">
-                    <button type="button" class="btn btn-primary">Log In</button>
-                </div>
-                <div style="text-align: center; margin-top: 10px;">
-                    Are you a new user <a href="register.html">Register</a>
-                </div>
+                <form action="" method="post">
+                    <div class="mb-3">
+                        <label for="Input1" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="Input1" placeholder="username" name="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Input2" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="Input2" name="pwd">
+                    </div>
+                    <div style="text-align: center; margin-top: 40px;">
+                        <input type="button" class="btn btn-primary" value="Log In">
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        Are you a new user <a href="register.html">Register</a>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

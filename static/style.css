@@ -10,11 +10,11 @@
 #canvas {
     width: 60%;
     margin: auto;
-    height: 800px;
+    height: 760px;
 }
 
 #form-body {
-    width: 300px;
+    width: 350px;
     height: 400px;
     margin: auto;
     border: 1px solid grey;

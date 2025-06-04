@@ -13,26 +13,30 @@
     <div id="main">
         <div id="canvas">
             <div id="form-body" style="height: 460px;">
-                <h1 style="text-align: center; margin-bottom: 30px;">Register Form</h1>
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" id="exampleFormControlInput1"
-                        placeholder="name@example.com">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Username</label>
-                    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="username">
-                </div>
-                <div class="mb-3">
-                    <label for="exampleFormControlInput2" class="form-label">Password</label>
-                    <input type="password" class="form-control" id="exampleFormControlInput2">
-                </div>
-                <div style="text-align: center; margin-top: 10px;">
-                    <button type="button" class="btn btn-primary">Register</button>
-                </div>
-                <div style="text-align: center; margin-top: 10px;">
-                    Are you an existing user <a href="login.html">Login</a>
-                </div>
+                <form action="" method="post">
+                    
+                    <h1 style="text-align: center; margin-bottom: 30px;">Register Form</h1>
+                    <div class="mb-3">
+                        <label for="Input1" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="Input1"
+                            placeholder="name@example.com" name="email">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Input2" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="Input2" placeholder="username" name="username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Input3" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="Input3" name="pwd">
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <input type="button" class="btn btn-primary" value="Register">
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        Are you an existing user <a href="login.html">Login</a>
+                    </div>
+                
+                </form>
             </div>
         </div>
     </div>
