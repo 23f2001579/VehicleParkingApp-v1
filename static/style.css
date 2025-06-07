@@ -4,11 +4,11 @@
 
 #main,
 #canvas {
-    border: 2px solid black;
+    border: 1px solid black;
 }
 
 #canvas {
-    width: 60%;
+    width: 70%;
     margin: auto;
     height: 760px;
 }
@@ -21,4 +21,9 @@
     margin-top :200px;
     border-radius: 12px;
     padding: 20px;
+}
+
+.navbar {
+    padding-left: 15%;
+    padding-right: 15%;
 }
