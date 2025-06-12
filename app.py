@@ -11,7 +11,7 @@ def create_app():
     return app
 
 app = create_app()
-from controllers.controllers import * #2 controllers
+from controllers.controller import * #2 controllers
 # from application.models import #indirect connection using controllers.py
 if __name__ == "__main__":
     app.run(debug = True)
