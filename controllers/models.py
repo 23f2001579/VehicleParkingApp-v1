@@ -7,7 +7,7 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     type = db.Column(db.String, default="general")
-
+    pincode = db.Column(db.String(6), nullable=False)
     reservations = db.relationship('Reservation', backref='user')
 
 class ParkingLot(db.Model):
