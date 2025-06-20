@@ -1,6 +1,8 @@
 from .database import db #check for this file in the folder you are existing
 from datetime import datetime
-class User(db.Model):
+from flask_login import UserMixin
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable = False)
     password = db.Column(db.String, nullable=False)
@@ -23,7 +25,7 @@ class ParkingLot(db.Model):
 class ParkingSpot(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     lot_id = db.Column(db.Integer, db.ForeignKey('parking_lot.id'), nullable=False)
-    status = db.Column(db.String(1), nullable=False)
+    status = db.Column(db.String(1), nullable=False, default='A')
 
     reservations = db.relationship('Reservation', backref='spot')
 
