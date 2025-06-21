@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
 from flask import current_app as app
-from flask_login import login_user, login_required, login_manager
+from flask_login import login_user, login_required, login_manager, current_user
 
 from .models import *
 this_user=None
@@ -19,11 +19,9 @@ def login():
             if this_user.password == pwd:
                 login_user(this_user)
                 if this_user.type == "admin":
-                    redirect("/admin_dashboard")
-                    return render_template("admin_home.html",user=this_user)
+                    return redirect("/admin_dashboard")
                 else:
-                    redirect("/user_dashboard")
-                    return render_template("user_home.html",user=this_user)
+                    return redirect("/user_dashboard")
             return "Incorrect password"
         return "Invalid user"
     return render_template("login.html")
@@ -52,13 +50,25 @@ def register():
 @app.route('/admin_dashboard')
 @login_required
 def admin_dashboard():
-    lots = ParkingLot.query.all()  # get all parking lots from the DB
-    return render_template("admin_home.html", lots=lots, user=this_user)
+    lots = ParkingLot.query.all() 
+    return render_template("admin_home.html", lots=lots, user=current_user)
 
 @app.route("/user_dashboard")
 @login_required
 def user_dashboard():
-    return render_template("user_home.html", user=this_user)
+    lots = ParkingLot.query.all()
+    lots_avl = []
+
+    for lot in lots:
+        total_spots = ParkingSpot.query.filter_by(lot_id=lot.id).count()
+        available_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status="A").count()
+        lots_avl.append({
+            "lot": lot,
+            "available": available_spots,
+            "total": total_spots
+        })
+
+    return render_template("user_home.html", lots=lots_avl, user=current_user)
 
 @app.route("/add_lot", methods=["GET", "POST"])
 @login_required
@@ -84,6 +94,26 @@ def add_lot():
         return render_template("admin_home.html",user=this_user)
             
     return render_template("new_lot.html")
+
+@app.route("/book_spot/<int:lot_id>", methods=["GET", "POST"])
+@login_required
+def book_spot(lot_id):
+    this_lot = ParkingLot.query.filter_by(id=lot_id).first()
+    avl_spot = ParkingSpot.query.filter_by(lot_id=lot_id, status="A").first()
+    if request.method == "POST":
+        v_no = request.form.get("vehicle_no")
+        
+        new_reservation = Reservation(
+            spot_id=avl_spot.id, user_id=current_user.id,
+            lot_id=this_lot.price, parking_price=this_lot.price, 
+            vehicle_no=v_no)
+        db.session.add(new_reservation)
+        avl_spot.status = 'O'
+        db.session.commit()
+
+        return redirect("/user_dashboard")
+
+    return render_template("book_spot.html",lot=this_lot, user=current_user, spot=avl_spot)
 
 @app.route("/edit_lot/<int:lot_id>", methods=["GET", "POST"])
 @login_required
