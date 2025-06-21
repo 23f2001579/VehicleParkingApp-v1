@@ -16,24 +16,24 @@
                 <h1 style="text-align: center; margin-bottom: 30px;">Book the Parking Spot</h1>
                     <div class="mb-3">
                         <label for="spotid" class="form-label">Spot ID:</label>
-                        <input class="form-control" type="text" value="xxxxxx" aria-label="Disabled input example" disabled readonly>
+                        <input class="form-control" type="text" value="{{ spot.id }}" aria-label="Disabled input example" disabled readonly>
                     </div>
                     <div class="mb-3">
                         <label for="lotid" class="form-label">Lot ID:</label>
-                        <input class="form-control" type="text" value="xxxxxx" aria-label="readonly input example" readonly>
+                        <input class="form-control" type="text" value="{{ lot.id }}" aria-label="readonly input example" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="userid" class="form-label">User ID:</label>
-                        <input class="form-control" type="text" value="xxxxxx" aria-label="readonly input example" readonly>
+                        <input class="form-control" type="text" value="{{ user.username }}" aria-label="readonly input example" readonly>
                     </div>
                 <form action="" method="post">
                     <div class="mb-3">
                         <label for="Input1" class="form-label">Vehicle Number:</label>
-                        <input type="text" class="form-control" id="Input1" placeholder="TN01AB1234" name="vehicle_no">
+                        <input type="text" class="form-control" id="Input1" placeholder="TN01AB1234" required name="vehicle_no">
                     </div>
                     <div style="text-align: center; margin-top: 40px;">
-                        <input type="button" class="btn btn-primary" value="Reserve">
-                        <input type="button" class="btn btn-primary" value="Cancel">
+                        <input type="submit" class="btn btn-primary" value="Reserve">
+                        <a href="/user_dashboard" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
             </div>
