@@ -14,30 +14,42 @@
         <div id="canvas">
             <div id="form-body" style="height: 610px; width: 520px; margin-top: 80px;">
                 <h1 style="text-align: center; margin-bottom: 30px;">Release the Parking Spot</h1>
-                    <div class="mb-3">
-                        <label for="spotid" class="form-label">Spot ID:</label>
-                        <input class="form-control" type="text" value="xxxxxx" name="spotid" aria-label="Disabled input example" disabled readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vehicle_no" class="form-label">Vehicle Number:</label>
-                        <input class="form-control" type="text" value="xxxxxx" name="vehicle_no" aria-label="Disabled input example" disabled readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="timestamp" class="form-label">Parking time:</label>
-                        <input class="form-control" type="time" value="20:30" name="parking_time" aria-label="Disabled input example" disabled readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="release_time" class="form-label">Releasing time:</label>
-                        <input class="form-control" type="time" value="22:35" name="release_time" aria-label="readonly input example" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="userid" class="form-label">Total Cost:</label>
-                        <input class="form-control" type="text" value="Rs.xxx" name="total_cost" aria-label="readonly input example" readonly>
-                    </div>
+                <div class="mb-3">
+                    <label for="spotid" class="form-label">Spot ID:</label>
+                    <input class="form-control" type="text" value="{{ booking.spot_id }}" name="spotid"
+                        aria-label="Disabled input example" disabled readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="vehicle_no" class="form-label">Vehicle Number:</label>
+                    <input class="form-control" type="text" value="{{ booking.vehicle_no }}" name="vehicle_no"
+                        aria-label="Disabled input example" disabled readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="timestamp" class="form-label">Parking time:</label>
+                    <input class="form-control" type="text"
+                        value="{{ booking.parking_timestamp.strftime('%d/%b/%Y %I:%M %p') }}" name="parking_time"
+                        aria-label="readonly input example" disabled readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="release_time" class="form-label">Releasing time:</label>
+                    <input class="form-control" type="text"
+                    value="{{ current_time.strftime('%d/%b/%Y %I:%M %p') }}" name="release_time"
+                        aria-label="readonly input example" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="duration" class="form-label">Duration (in hours):</label>
+                    <input class="form-control" type="text" value="{{ duration }}" name="release_time"
+                        aria-label="readonly input example" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">Total Cost:</label>
+                    <input class="form-control" type="text" value="Rs.{{ cost }}" name="total_cost"
+                        aria-label="readonly input example" readonly>
+                </div>
                 <form action="" method="post">
                     <div style="text-align: center; margin-top: 40px;">
-                        <input type="button" class="btn btn-primary" value="Release">
-                        <input type="button" class="btn btn-secondary" value="Cancel">
+                        <input type="submit" class="btn btn-primary" value="Release">
+                        <a href="/user_dashboard" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
             </div>
