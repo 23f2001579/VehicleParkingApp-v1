@@ -33,8 +33,8 @@ class Reservation(db.Model):
     spot_id = db.Column(db.Integer, db.ForeignKey('parking_spot.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable = False)
     lot_id = db.Column(db.Integer, db.ForeignKey('parking_lot.id'), nullable = False)
-    parking_timestamp = db.Column(db.DateTime, default=datetime.utcnow)
-    leaving_timestamp = db.Column(db.DateTime, nullable=True)
+    parking_timestamp = db.Column(db.DateTime(timezone=True), nullable=False)
+    leaving_timestamp = db.Column(db.DateTime(timezone=True), nullable=True)
     parking_price = db.Column(db.Integer, nullable=False)
     vehicle_no = db.Column(db.String, nullable=False)
 

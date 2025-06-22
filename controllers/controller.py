@@ -1,9 +1,12 @@
 from flask import Flask, render_template, redirect, request, url_for
 from flask import current_app as app
 from flask_login import login_user, login_required, login_manager, current_user
+from datetime import datetime, timedelta
+import pytz
+ist = pytz.timezone("Asia/Kolkata")
 
 from .models import *
-this_user=None
+
 @app.route("/")
 def home():
     return redirect("/login")
@@ -67,8 +70,12 @@ def user_dashboard():
             "available": available_spots,
             "total": total_spots
         })
-
-    return render_template("user_home.html", lots=lots_avl, user=current_user)
+    reservations = Reservation.query.filter_by(user_id=current_user.id)
+    parking_history = []
+    for event in reservations:
+        lot = ParkingLot.query.filter_by(id=event.lot_id).first()
+        parking_history.append({"booking": event, "lot": lot})
+    return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
 
 @app.route("/add_lot", methods=["GET", "POST"])
 @login_required
@@ -94,26 +101,6 @@ def add_lot():
         return render_template("admin_home.html",user=this_user)
             
     return render_template("new_lot.html")
-
-@app.route("/book_spot/<int:lot_id>", methods=["GET", "POST"])
-@login_required
-def book_spot(lot_id):
-    this_lot = ParkingLot.query.filter_by(id=lot_id).first()
-    avl_spot = ParkingSpot.query.filter_by(lot_id=lot_id, status="A").first()
-    if request.method == "POST":
-        v_no = request.form.get("vehicle_no")
-        
-        new_reservation = Reservation(
-            spot_id=avl_spot.id, user_id=current_user.id,
-            lot_id=this_lot.price, parking_price=this_lot.price, 
-            vehicle_no=v_no)
-        db.session.add(new_reservation)
-        avl_spot.status = 'O'
-        db.session.commit()
-
-        return redirect("/user_dashboard")
-
-    return render_template("book_spot.html",lot=this_lot, user=current_user, spot=avl_spot)
 
 @app.route("/edit_lot/<int:lot_id>", methods=["GET", "POST"])
 @login_required
@@ -148,3 +135,48 @@ def edit_lot(lot_id):
 
     this_lot = ParkingLot.query.filter_by(id=lot_id).first()
     return render_template("edit_lot.html",lot=this_lot)
+
+@app.route("/book_spot/<int:lot_id>", methods=["GET", "POST"])
+@login_required
+def book_spot(lot_id):
+    this_lot = ParkingLot.query.filter_by(id=lot_id).first()
+    avl_spot = ParkingSpot.query.filter_by(lot_id=lot_id, status="A").first()
+    if request.method == "POST":
+        v_no = request.form.get("vehicle_no")
+        now = datetime.now(ist)
+        new_reservation = Reservation(
+            spot_id=avl_spot.id, user_id=current_user.id,
+            lot_id=lot_id, parking_price=this_lot.price, 
+            vehicle_no=v_no, parking_timestamp=now)
+        db.session.add(new_reservation)
+        avl_spot.status = 'O'
+        db.session.commit()
+
+        return redirect("/user_dashboard")
+
+    return render_template("book_spot.html", lot=this_lot, user=current_user, spot=avl_spot)
+
+@app.route("/release_spot/<int:booking_id>", methods=["GET", "POST"])
+@login_required
+def release_spot(booking_id):
+    this_booking = Reservation.query.filter_by(id=booking_id).first()
+    this_lot = ParkingLot.query.filter_by(id=this_booking.lot_id).first()
+    now = datetime.now(ist)
+    current_time = now.strftime("%H:%M") 
+    start_time = ist.localize(this_booking.parking_timestamp)
+    total_minutes = int((now - start_time).total_seconds() / 60)
+    duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
+    
+    cost = int(this_booking.parking_price * total_minutes / 60 )
+    if request.method == "POST":
+        
+        this_booking.leaving_timestamp=now
+        this_spot = ParkingSpot.query.filter_by(id=this_booking.spot_id).first()
+        this_spot.status = 'A'
+        db.session.commit()
+
+        return redirect("/user_dashboard")
+
+    return render_template("release_spot.html", booking=this_booking, 
+        current_time=now, cost=cost, duration=duration )
+    
