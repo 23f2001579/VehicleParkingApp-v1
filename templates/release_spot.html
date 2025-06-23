@@ -27,13 +27,13 @@
                 <div class="mb-3">
                     <label for="timestamp" class="form-label">Parking time:</label>
                     <input class="form-control" type="text"
-                        value="{{ booking.parking_timestamp.strftime('%d/%b/%Y %I:%M %p') }}" name="parking_time"
+                        value="{{ booking.parking_timestamp.strftime('%d-%b-%Y %I:%M %p') }}" name="parking_time"
                         aria-label="readonly input example" disabled readonly>
                 </div>
                 <div class="mb-3">
                     <label for="release_time" class="form-label">Releasing time:</label>
                     <input class="form-control" type="text"
-                    value="{{ current_time.strftime('%d/%b/%Y %I:%M %p') }}" name="release_time"
+                    value="{{ current_time.strftime('%d-%b-%Y %I:%M %p') }}" name="release_time"
                         aria-label="readonly input example" readonly>
                 </div>
                 <div class="mb-3">
