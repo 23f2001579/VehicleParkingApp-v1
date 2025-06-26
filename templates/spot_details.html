@@ -14,29 +14,35 @@
         <div id="canvas">
             <div id="form-body" style="height: 610px; width: 520px; margin-top: 80px;">
                 <h1 style="text-align: center; margin-bottom: 30px;">Occupied Parking Spot Details</h1>
-                    <div class="mb-3">
-                        <label for="spotid" class="form-label">Spot ID:</label>
-                        <input class="form-control" type="text" name="spotid" value="xxxx" aria-label="Disabled input example" disabled readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="vehicle_no" class="form-label">Customer ID</label>
-                        <input class="form-control" type="text" name="cust_id" value="xxxxxx" aria-label="readonly input example" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="timestamp" class="form-label">Vehicle Number:</label>
-                        <input class="form-control" type="text" name="vehicle_no" value="TN01AB1234" aria-label="readonly input example" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="release_time" class="form-label">Date/time of Parking:</label>
-                        <input class="form-control" type="time" name="parking_time" value="07:40" aria-label="readonly input example" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="userid" class="form-label">Estimated Parking Cost:</label>
-                        <input class="form-control" type="text" value="Rs.xxx" aria-label="readonly input example" readonly>
-                    </div>
+                <div class="mb-3">
+                    <label for="spotid" class="form-label">Spot ID:</label>
+                    <input class="form-control" type="text" name="spotid" value="{{ spot.id }}"
+                        aria-label="Disabled input example" disabled readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="vehicle_no" class="form-label">Customer ID</label>
+                    <input class="form-control" type="text" name="cust_id" value="{{ booking.user_id }}"
+                        aria-label="readonly input example" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="timestamp" class="form-label">Vehicle Number:</label>
+                    <input class="form-control" type="text" name="vehicle_no" value="{{ booking.vehicle_no }}"
+                        aria-label="readonly input example" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="release_time" class="form-label">Parking time:</label>
+                    <input class="form-control" type="text" name="parking_time"
+                        value="{{ booking.parking_timestamp.strftime('%d-%b-%Y %I:%M %p') }}"
+                        aria-label="readonly input example" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="userid" class="form-label">Estimated Parking Cost:</label>
+                    <input class="form-control" type="text" value="Rs.{{ cost }}" aria-label="readonly input example"
+                        readonly>
+                </div>
                 <form action="" method="post">
                     <div style="text-align: center; margin-top: 40px;">
-                        <input type="button" class="btn btn-secondary" value="Close">
+                        <a type="button" class="btn btn-secondary" href="/admin_dashboard">Close</a>
                     </div>
                 </form>
             </div>

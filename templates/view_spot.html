@@ -21,9 +21,10 @@
                     <div class="mb-3">
                         <label for="vehicle_no" class="form-label">Status:</label>
                         {% if spot.status == 'A' %}
-                        <input type="button" class="btn btn-info mx-3" value="Available">
+                        <input type="button" class="btn btn-light mx-3" value="Available" disabled>
                         {% else %}
-                        <input type="button" class="btn btn-info mx-3" value="Occupied">
+                        <a type="button" class="btn btn-info mx-3" 
+                        href="{{ url_for('spot_details', spot_id=spot.id) }}">Occupied</a>
                         {% endif %}
                     </div>
                 <form action="{{ url_for('view_spot', spot_id=spot.id) }}" method="post">

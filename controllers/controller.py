@@ -122,7 +122,7 @@ def edit_lot(lot_id):
         this_lot.address = request.form.get("address")
         this_lot.price = float(request.form.get("price"))
         this_lot.pincode = request.form.get("pincode")
-        existing_spots = ParkingSpot.query.filter_by(lot_id=this_lot.id).count()
+        existing_spots = ParkingSpot.query.filter_by(lot_id=this_lot.id, active=1).count()
 
         max_spots = int(request.form.get("max_spots"))
         if existing_spots == max_spots:
@@ -213,3 +213,16 @@ def view_spot(spot_id):
         return redirect("/admin_dashboard")
 
     return render_template("view_spot.html", spot=this_spot)
+
+@app.route("/spot_details/<int:spot_id>")
+@login_required
+def spot_details(spot_id):
+    this_spot = ParkingSpot.query.filter_by(id=spot_id).first()
+    this_booking = Reservation.query.filter_by(spot_id=spot_id, leaving_timestamp=None).first()
+    now = datetime.now(ist)
+    start_time = ist.localize(this_booking.parking_timestamp)
+    total_minutes = int((now - start_time).total_seconds() / 60)
+    duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
+    
+    cost = int(this_booking.parking_price * total_minutes / 60 )
+    return render_template("spot_details.html", spot=this_spot, booking=this_booking, cost=cost)
