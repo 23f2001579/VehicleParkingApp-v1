@@ -19,13 +19,15 @@ class ParkingLot(db.Model):
     address = db.Column(db.String, nullable=False)
     pincode = db.Column(db.Integer,nullable = False)
     maximum_spots = db.Column(db.Integer, nullable=False)
-
+    active = db.Column(db.Boolean, nullable=False, default=True)
+    
     spots = db.relationship('ParkingSpot', backref='lot')
 
 class ParkingSpot(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     lot_id = db.Column(db.Integer, db.ForeignKey('parking_lot.id'), nullable=False)
     status = db.Column(db.String(1), nullable=False, default='A')
+    active = db.Column(db.Boolean, nullable=False, default=True)
     reservations = db.relationship('Reservation', backref='spot')
 
 class Reservation(db.Model):

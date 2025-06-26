@@ -16,16 +16,20 @@
                 <h1 style="text-align: center; margin-bottom: 30px;">View/Delete Parking Spot</h1>
                     <div class="mb-3">
                         <label for="spotid" class="form-label">Spot ID:</label>
-                        <input class="form-control" type="text" value="xxxxxx" name="spotid" aria-label="Disabled input example" disabled readonly>
+                        <input class="form-control" type="text" value="{{ spot.id }}" name="spotid" aria-label="Disabled input example" disabled readonly>
                     </div>
-                <form action="" method="post">
                     <div class="mb-3">
                         <label for="vehicle_no" class="form-label">Status:</label>
+                        {% if spot.status == 'A' %}
                         <input type="button" class="btn btn-info mx-3" value="Available">
+                        {% else %}
+                        <input type="button" class="btn btn-info mx-3" value="Occupied">
+                        {% endif %}
                     </div>
+                <form action="{{ url_for('view_spot', spot_id=spot.id) }}" method="post">
                     <div style="text-align: center; margin-top: 40px;">
-                        <input type="button" class="btn btn-danger" value="Delete">
-                        <input type="button" class="btn btn-secondary" value="Close">
+                        <input type="submit" class="btn btn-danger" value="Delete">
+                        <a href="/admin_dashboard" class="btn btn-secondary">Cancel</a>
                     </div>
                 </form>
             </div>
