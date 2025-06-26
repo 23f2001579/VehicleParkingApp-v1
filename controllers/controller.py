@@ -100,9 +100,11 @@ def add_lot():
         pincode=pincode, maximum_spots=max_spots)
         db.session.add(new_lot)
         db.session.commit()
-
-        for _ in range(new_lot.maximum_spots):
-            spot = ParkingSpot(lot_id=new_lot.id)
+        
+        new_id = new_lot.id*10000
+        for num in range(new_lot.maximum_spots):
+            new_id += 1
+            spot = ParkingSpot(id=new_id, lot_id=new_lot.id)
             db.session.add(spot)
         db.session.commit()
 
@@ -127,10 +129,10 @@ def edit_lot(lot_id):
             pass
         elif existing_spots < max_spots:
             print("Adding spots")
-            last_spot = ParkingSpot.query.filter_by(lot_id=lot_id).order_by(ParkingSpot.id.desc()).first()
+            last_id = ParkingSpot.query.filter_by(lot_id=lot_id).order_by(ParkingSpot.id.desc()).first().id
             for num in range(max_spots-existing_spots):
-                new_id = last_spot.id+1+num
-                spot = ParkingSpot(lot_id=this_lot.id, id=new_id)
+                last_id +=1
+                spot = ParkingSpot(lot_id=this_lot.id, id=last_id)
                 this_lot.maximum_spots = max_spots
                 db.session.add(spot)
         else:
