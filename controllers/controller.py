@@ -56,14 +56,23 @@ def admin_dashboard():
     lots = ParkingLot.query.all() 
     return render_template("admin_home.html", lots=lots, user=current_user)
 
-@app.route("/user_dashboard")
+@app.route("/user_dashboard", methods=["GET", "POST"])
 @login_required
 def user_dashboard():
     lots = ParkingLot.query.all()
     lots_avl = []
+    keyword = ""
+
+    if request.method == "POST":
+        kword = request.form.get("keyword")
+        lots = ParkingLot.query.filter(
+            ParkingLot.prime_location_name.ilike(f"%{kword}%") |
+            ParkingLot.address.ilike(f"%{kword}%") |
+            ParkingLot.pincode.ilike(f"%{kword}%")
+        ).all()
 
     for lot in lots:
-        total_spots = ParkingSpot.query.filter_by(lot_id=lot.id).count()
+        total_spots = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
         available_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status="A").count()
         lots_avl.append({
             "lot": lot,
@@ -105,35 +114,43 @@ def add_lot():
 @app.route("/edit_lot/<int:lot_id>", methods=["GET", "POST"])
 @login_required
 def edit_lot(lot_id):
+    this_lot = ParkingLot.query.filter_by(id=lot_id).first()
     if request.method == "POST":
         this_lot.prime_location_name = request.form.get("location")
         this_lot.address = request.form.get("address")
         this_lot.price = float(request.form.get("price"))
         this_lot.pincode = request.form.get("pincode")
-        existing_spots = this_lot.maximum_spots
+        existing_spots = ParkingSpot.query.filter_by(lot_id=this_lot.id).count()
 
         max_spots = int(request.form.get("max_spots"))
         if existing_spots == max_spots:
             pass
         elif existing_spots < max_spots:
-            for _ in range(max_spots-existing_spots):
-                spot = ParkingSpot(lot_id=this_lot.id)
+            print("Adding spots")
+            last_spot = ParkingSpot.query.filter_by(lot_id=lot_id).order_by(ParkingSpot.id.desc()).first()
+            for num in range(max_spots-existing_spots):
+                new_id = last_spot.id+1+num
+                spot = ParkingSpot(lot_id=this_lot.id, id=new_id)
+                this_lot.maximum_spots = max_spots
                 db.session.add(spot)
         else:
-            excess = existing_spots - this_lot.maximum_spots
-            available_spots = ParkingSpot.query.filter_by(lot_id=this_lot.id, status='A').limit(excess).all()
+            print("Deleting spots")
+            excess = existing_spots - max_spots
+            available_spots = ParkingSpot.query.filter_by(lot_id=this_lot.id, status='A')\
+                .order_by(ParkingSpot.id.desc()).limit(excess).all()
 
             if len(available_spots) < excess:
                 flash("Cannot reduce spots. Too many are currently occupied.", "danger")
-                return redirect("/edit_lot/{}".format(this_lot.id))
+                return url_for("edit_lot", lot_id=this_lot.id)
 
             for spot in available_spots:
-                db.session.delete(spot)
+                spot.active = 0
+                spot.status = 'I'
+            this_lot.maximum_spots = max_spots
 
         db.session.commit()
         return redirect("/admin_dashboard")
 
-    this_lot = ParkingLot.query.filter_by(id=lot_id).first()
     return render_template("edit_lot.html",lot=this_lot)
 
 @app.route("/book_spot/<int:lot_id>", methods=["GET", "POST"])
@@ -179,4 +196,18 @@ def release_spot(booking_id):
 
     return render_template("release_spot.html", booking=this_booking, 
         current_time=now, cost=cost, duration=duration )
-    
+
+@app.route("/view_spot/<int:spot_id>", methods=["GET", "POST"])
+@login_required
+def view_spot(spot_id):
+    this_spot = ParkingSpot.query.filter_by(id=spot_id).first()
+    if request.method == "POST":
+        this_lot = ParkingLot.query.filter_by(id=this_spot.lot_id).first()
+        this_lot.maximum_spots -= 1
+        this_spot.active = 0
+        this_spot.status = 'I'
+
+        db.session.commit()
+        return redirect("/admin_dashboard")
+
+    return render_template("view_spot.html", spot=this_spot)
