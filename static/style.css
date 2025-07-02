@@ -10,12 +10,15 @@
 #canvas {
     width: 70%;
     margin: auto;
-    height: 760px;
+    height: auto;
+    min-height: 760px;
+    padding: 20px
 }
 
 #form-body {
     width: 350px;
-    height: 400px;
+    height: auto;
+    min-height: 400px;
     margin: auto;
     border: 1px solid grey;
     margin-top :200px;
