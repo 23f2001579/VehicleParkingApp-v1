@@ -29,7 +29,7 @@
             </div>
         </nav>
         <div id="canvas">
-            <h3 style="text-align: center; margin-top: 30px; margin-bottom: 20px;">Recent Parking History</h3>
+            <div class="h3 text-center pt-2 pb-2 mb-3 rounded-3 border border-2 border-primary" style="margin: auto; width: 85%;">Recent Parking History</div>
             <table class="table" style="margin: auto; width: 85%; border: 2px;">
                 <thead>
                     <tr>
@@ -37,6 +37,7 @@
                         <th scope="col">Location</th>
                         <th scope="col">Vehicle Number</th>
                         <th scope="col">Parking Timestamp</th>
+                        <th scope="col">Duration</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -47,6 +48,7 @@
                         <td>{{ event.lot.prime_location_name }}</td>
                         <td>{{ event.booking.vehicle_no }}</td>
                         <td>{{ event.booking.parking_timestamp.strftime('%d-%b-%Y %I:%M %p') }}</td>
+                        <td>{{ event.duration }}</td>
                         <td>
                             {% if not event.booking.leaving_timestamp %}
                             <div>
@@ -64,13 +66,14 @@
                 </tbody>
             </table>
             <br>
-            <h3 style="text-align: center; margin-top: 30px; margin-bottom: 20px;">View Parking Lots</h3>
+            <div class="h3 text-center pt-2 pb-2 mt-3 mb-3 rounded-3 border border-2 border-primary" style="margin: auto; width: 85%;">View Parking Lots</div>
+
             
                 <div class="d-flex justify-content-evenly align-self-center flex-row mb-3" style="width: 85%; margin:auto">
                     <p class="h5 mb-0 mt-2">Search by Location / Pincode</a>
                     <form class="d-flex" role="search" method="post">
                         <input class="form-control p-2 mx-2" type="search" placeholder="Search" name="keyword" aria-label="Search" />
-                        <button class="btn btn-outline-success p-2" type="submit">Search</button>
+                        <button class="btn btn-outline-secondary p-2" type="submit">Search</button>
                     </form>
                 </div>
             <table class="table" style="margin: auto; width: 85%; border: 2px;">

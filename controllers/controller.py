@@ -61,6 +61,11 @@ def admin_users():
     user_list = User.query.filter_by(type="general")
     return render_template("admin_users.html", user=current_user, list = user_list)
 
+@app.route('/admin_dashboard/search')
+@login_required
+def admin_search():
+    return render_template("admin_search.html", user=current_user)
+
 @app.route("/user_dashboard", methods=["GET", "POST"])
 @login_required
 def user_dashboard():
@@ -78,17 +83,21 @@ def user_dashboard():
 
     for lot in lots:
         total_spots = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
-        available_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status="A").count()
+        avl_spots = ParkingSpot.query.filter_by(lot_id=lot.id, status="A").count()
         lots_avl.append({
             "lot": lot,
-            "available": available_spots,
+            "available": avl_spots,
             "total": total_spots
         })
     reservations = Reservation.query.filter_by(user_id=current_user.id)
     parking_history = []
     for event in reservations:
         lot = ParkingLot.query.filter_by(id=event.lot_id).first()
-        parking_history.append({"booking": event, "lot": lot})
+        duration='Not yet released'
+        if event.leaving_timestamp!=None:
+            total_minutes = int((event.leaving_timestamp - event.parking_timestamp).total_seconds() / 60)
+            duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
+        parking_history.append({"booking": event, "lot": lot, "duration": duration })
     return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
 
 @app.route("/add_lot", methods=["GET", "POST"])
