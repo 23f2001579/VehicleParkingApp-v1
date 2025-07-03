@@ -31,11 +31,18 @@
             </div>
         </nav>
         <div id="canvas">
-            <select class="form-select md" aria-label="searchby" aria-placeholder="Search By">
-                <option selected>Search by</option>
-                <option value="1">User ID</option>
-                <option value="2">Parking Lot</option>
-            </select>
+            <div class="d-flex justify-content-evenly align-self-center flex-row mb-3" style="width: 85%; margin:auto">
+                <form class="d-flex" role="search" method="post">
+                    <select class="form-select" aria-label="search" style="width: 55%;">
+                        <option selected>Search by</option>
+                        <option value="1">User ID</option>
+                        <option value="2">Parking Lot</option>
+                    </select>
+                    <input class="form-control p-2 mx-2" type="search" placeholder="Search" name="keyword" aria-label="Search" />
+                    <button class="btn btn-outline-secondary p-2" type="submit">Search</button>
+                </form>
+            </div>
+            
             
 
         </div>
