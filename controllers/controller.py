@@ -49,12 +49,17 @@ def register():
             
     return render_template("register.html")
 
-
 @app.route('/admin_dashboard')
 @login_required
 def admin_dashboard():
     lots = ParkingLot.query.all() 
     return render_template("admin_home.html", lots=lots, user=current_user)
+
+@app.route('/admin_dashboard/users')
+@login_required
+def admin_users():
+    user_list = User.query.filter_by(type="general")
+    return render_template("admin_users.html", user=current_user, list = user_list)
 
 @app.route("/user_dashboard", methods=["GET", "POST"])
 @login_required
