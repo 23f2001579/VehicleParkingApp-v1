@@ -192,25 +192,26 @@ def book_spot(lot_id):
 @app.route("/release_spot/<int:booking_id>", methods=["GET", "POST"])
 @login_required
 def release_spot(booking_id):
-    this_booking = Reservation.query.filter_by(id=booking_id).first()
-    this_lot = ParkingLot.query.filter_by(id=this_booking.lot_id).first()
+    booking = Reservation.query.filter_by(id=booking_id).first()
+    lot = ParkingLot.query.filter_by(id=booking.lot_id).first()
     now = datetime.now(ist)
     current_time = now.strftime("%H:%M") 
-    start_time = ist.localize(this_booking.parking_timestamp)
+    start_time = ist.localize(booking.parking_timestamp)
     total_minutes = int((now - start_time).total_seconds() / 60)
     duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
-    
-    cost = int(this_booking.parking_price * total_minutes / 60 )
+    cost = int(booking.parking_price * total_minutes / 60 )
+
     if request.method == "POST":
         
-        this_booking.leaving_timestamp=now
-        this_spot = ParkingSpot.query.filter_by(id=this_booking.spot_id).first()
+        booking.leaving_timestamp=now
+        this_spot = ParkingSpot.query.filter_by(id=booking.spot_id).first()
         this_spot.status = 'A'
+        booking.cost = cost
         db.session.commit()
 
         return redirect("/user_dashboard")
 
-    return render_template("release_spot.html", booking=this_booking, 
+    return render_template("release_spot.html", booking=booking, 
         current_time=now, cost=cost, duration=duration )
 
 @app.route("/view_spot/<int:spot_id>", methods=["GET", "POST"])
@@ -232,11 +233,12 @@ def view_spot(spot_id):
 @login_required
 def spot_details(spot_id):
     this_spot = ParkingSpot.query.filter_by(id=spot_id).first()
-    this_booking = Reservation.query.filter_by(spot_id=spot_id, leaving_timestamp=None).first()
+    booking = Reservation.query.filter_by(spot_id=spot_id, leaving_timestamp=None).first()
+    customer = User.query.filter_by(id=booking.user_id).first()
     now = datetime.now(ist)
-    start_time = ist.localize(this_booking.parking_timestamp)
+    start_time = ist.localize(booking.parking_timestamp)
     total_minutes = int((now - start_time).total_seconds() / 60)
     duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
     
-    cost = int(this_booking.parking_price * total_minutes / 60 )
-    return render_template("spot_details.html", spot=this_spot, booking=this_booking, cost=cost)
+    cost = int(booking.parking_price * total_minutes / 60 )
+    return render_template("spot_details.html", spot=this_spot, booking=booking, cost=cost, user=current_user, customer=customer)

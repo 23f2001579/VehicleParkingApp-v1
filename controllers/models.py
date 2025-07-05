@@ -38,5 +38,6 @@ class Reservation(db.Model):
     parking_timestamp = db.Column(db.DateTime(timezone=True), nullable=False)
     leaving_timestamp = db.Column(db.DateTime(timezone=True), nullable=True)
     parking_price = db.Column(db.Integer, nullable=False)
+    cost = db.Column(db.Integer, nullable=True)
     vehicle_no = db.Column(db.String, nullable=False)
 
