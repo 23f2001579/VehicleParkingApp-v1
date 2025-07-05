@@ -46,7 +46,7 @@
                     <input class="form-control" type="text" value="Rs.{{ cost }}" name="total_cost"
                         aria-label="readonly input example" readonly>
                 </div>
-                <form action="" method="post">
+                <form action="/release_spot/{{booking.id}}" method="post">
                     <div style="text-align: center; margin-top: 40px;">
                         <input type="submit" class="btn btn-primary" value="Release">
                         <a href="/user_dashboard" class="btn btn-secondary">Cancel</a>

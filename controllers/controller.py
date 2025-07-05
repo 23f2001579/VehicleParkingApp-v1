@@ -52,8 +52,24 @@ def register():
 @app.route('/admin_dashboard')
 @login_required
 def admin_dashboard():
-    lots = ParkingLot.query.all() 
-    return render_template("admin_home.html", lots=lots, user=current_user)
+    lots = ParkingLot.query.filter_by(active=1) 
+    lot_with_avl = []
+    for lot in lots:
+        tot = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
+        occ = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
+        lot_with_avl.append({"info": lot, "total": tot, "occupied": occ})
+    return render_template("admin_home.html", lots=lot_with_avl, user=current_user)
+
+@app.route('/delete/<int:lot_id>')
+def delete_lot(lot_id):
+    ParkingLot.query.filter_by(id=lot_id).first().active = 0
+    spots = ParkingSpot.query.filter_by(lot_id=lot_id)
+    for spot in spots:
+        spot.active=0
+        spot.status='I'
+    db.session.commit()
+    return redirect("/admin_dashboard")
+    
 
 @app.route('/admin_dashboard/users')
 @login_required
