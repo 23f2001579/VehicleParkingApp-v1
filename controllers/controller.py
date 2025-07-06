@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request, url_for
 from flask import current_app as app
 from flask_login import login_user, login_required, login_manager, current_user
 from datetime import datetime, timedelta
+from sqlalchemy import or_, and_
 import pytz
 ist = pytz.timezone("Asia/Kolkata")
 
@@ -93,7 +94,22 @@ def admin_search():
             return render_template("admin_search.html", user=current_user, users=user_list, keyword=kword)
         
         elif searchtype=="2":
-            pass
+            lots = ParkingLot.query.filter(
+                ParkingLot.prime_location_name.ilike(f"%{kword}%") |
+                ParkingLot.address.ilike(f"%{kword}%") |
+                ParkingLot.pincode.ilike(f"%{kword}%")
+            ).all()
+            lots = ParkingLot.query.filter(
+                and_(ParkingLot.active == 1,
+                    or_(ParkingLot.prime_location_name.ilike(f"%{kword}%"),
+                        ParkingLot.address.ilike(f"%{kword}%"),
+                        ParkingLot.pincode.ilike(f"%{kword}%") ))).all()
+            lot_with_avl = []
+            for lot in lots:
+                tot = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
+                occ = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
+                lot_with_avl.append({"info": lot, "total": tot, "occupied": occ})
+            return render_template("admin_search.html", user=current_user, lots=lot_with_avl, keyword=kword)
     return render_template("admin_search.html", user=current_user)
 
 @app.route('/user_details/<int:user_id>', methods=["GET","POST"])
@@ -119,7 +135,7 @@ def user_details(user_id):
 @app.route("/user_dashboard", methods=["GET", "POST"])
 @login_required
 def user_dashboard():
-    lots = ParkingLot.query.all()
+    lots = ParkingLot.query.filter_by(active=1)
     lots_avl = []
     keyword = ""
 

@@ -71,8 +71,83 @@
                 </tbody>
             </table>
             {% elif lots %}
+            <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 85%;">
+            Search Results for "{{keyword}}" in Parking Lots
+            </div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
+                {% for lot in lots %}
+                <div class="col">
+                    <div class="card h-200 shadow-sm">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="card-title mb-0" style="max-width: 160px">{{ lot.info.prime_location_name }}</h5>
+                                <div>
+                                    <a href="{{ url_for('edit_lot', lot_id=lot.info.id) }}" type="button"
+                                        class="btn btn-outline-primary me-2">Edit</a>
+                                    
+                                    {% if lot.occupied==0 %}
+                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                        data-bs-target="#lotModal{{ lot.info.id }}">Delete</button>
 
+                                    <div class="modal fade" id="lotModal{{ lot.info.id }}" tabindex="-1"
+                                        aria-labelledby="lotModalLabel{{ lot.id }}" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="lotModalLabel{{ lot.id }}">Delete
+                                                        Parking Lot</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    Deleting this lot will result in automatic deletion of the spots
+                                                    contained in this lot.
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                    <a type="button" class="btn btn-danger" href="/delete/{{ lot.id }}">Delete</a>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover">
+                                        <button class="btn btn-outline-danger" type="button" disabled>Delete</button>
+                                    </span>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+
+                            <p class="text-success fw-semibold">Occupied: {{ lot.occupied }}/{{ lot.total }}</p>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for spot in lot.info.spots %}
+                                {% if spot.status == 'A' %}
+                                <a class="badge bg-success p-3" href="{{ url_for('view_spot', spot_id=spot.id) }}"
+                                    style="text-decoration:none;">A</a>
+
+                                {% elif spot.status == 'O' %}
+                                <a class="badge bg-danger p-3" href="{{ url_for('view_spot', spot_id=spot.id) }}"
+                                    style="text-decoration:none;">O</a>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 85%;">
+            Search Results
+            </div>
             {% endif %}
+            
 
              
 
