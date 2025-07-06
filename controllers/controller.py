@@ -82,6 +82,12 @@ def admin_users():
 def admin_search():
     return render_template("admin_search.html", user=current_user)
 
+@app.route('/user_details/<int:user_id>', methods=["GET","POST"])
+def user_details(user_id):
+    user=User.query.filter_by(id=user_id).first()
+
+    return render_template("user_details.html",user=user)
+
 @app.route("/user_dashboard", methods=["GET", "POST"])
 @login_required
 def user_dashboard():
@@ -172,8 +178,7 @@ def edit_lot(lot_id):
                 .order_by(ParkingSpot.id.desc()).limit(excess).all()
 
             if len(available_spots) < excess:
-                flash("Cannot reduce spots. Too many are currently occupied.", "danger")
-                return url_for("edit_lot", lot_id=this_lot.id)
+                return redirect(url_for("edit_lot", lot_id=this_lot.id))
 
             for spot in available_spots:
                 spot.active = 0
