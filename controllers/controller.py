@@ -77,9 +77,23 @@ def admin_users():
     user_list = User.query.filter_by(type="general")
     return render_template("admin_users.html", user=current_user, list = user_list)
 
-@app.route('/admin_dashboard/search')
+@app.route('/admin_dashboard/search', methods=["GET","POST"])
 @login_required
 def admin_search():
+    if request.method == "POST":
+        searchtype =request.form.get("type")
+        kword=request.form.get("keyword")
+
+        if searchtype=="1":
+            user_list=User.query.filter(
+                User.username.ilike(f"%{kword}%") |
+                User.id.ilike(f"%{kword}%") |
+                User.name.ilike(f"%{kword}%")
+            ).all()
+            return render_template("admin_search.html", user=current_user, users=user_list, keyword=kword)
+        
+        elif searchtype=="2":
+            pass
     return render_template("admin_search.html", user=current_user)
 
 @app.route('/user_details/<int:user_id>', methods=["GET","POST"])
