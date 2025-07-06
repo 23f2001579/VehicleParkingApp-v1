@@ -85,8 +85,22 @@ def admin_search():
 @app.route('/user_details/<int:user_id>', methods=["GET","POST"])
 def user_details(user_id):
     user=User.query.filter_by(id=user_id).first()
+    reservations = Reservation.query.filter_by(user_id=user_id)
+    parking_history = []
+    for event in reservations:
+        lot = ParkingLot.query.filter_by(id=event.lot_id).first()
+        duration='Not yet released'
+        if event.leaving_timestamp!=None:
+            total_minutes = int((event.leaving_timestamp - event.parking_timestamp).total_seconds() / 60)
+            duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
+        parking_history.append({"booking": event, "lot": lot, "duration": duration })
 
-    return render_template("user_details.html",user=user)
+    if request.method == "POST":
+        user.name=request.form.get("name")
+        user.address=request.form.get("address")
+        db.session.commit()
+        return redirect(url_for("user_details", user_id=user.id))
+    return render_template("user_details.html",user=user, history=parking_history)
 
 @app.route("/user_dashboard", methods=["GET", "POST"])
 @login_required
