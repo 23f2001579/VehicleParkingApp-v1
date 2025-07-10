@@ -1,8 +1,10 @@
 from flask import Flask, render_template, redirect, request, url_for
 from flask import current_app as app
 from flask_login import login_user, login_required, login_manager, current_user
-from datetime import datetime, timedelta
+
 from sqlalchemy import or_, and_
+
+from datetime import datetime, timedelta
 import pytz
 ist = pytz.timezone("Asia/Kolkata")
 
@@ -165,6 +167,17 @@ def user_dashboard():
             duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
         parking_history.append({"booking": event, "lot": lot, "duration": duration })
     return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
+
+@app.route('/summary')
+def user_summary():
+    bookings = Reservation.query.filter_by(user_id=current_user.id)
+    count = bookings.count()
+    total_duration_in_sec = sum( [ (i.leaving_timestamp-i.parking_timestamp).total_seconds() for i in bookings ])
+    total_duration = timedelta(seconds=total_duration_in_sec)
+    total_cost = sum([i.cost for i in bookings ])
+
+    return render_template("user_summary.html", user=current_user, count=count,
+     duration=total_duration, cost=total_cost)
 
 @app.route("/add_lot", methods=["GET", "POST"])
 @login_required
