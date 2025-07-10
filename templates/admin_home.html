@@ -21,10 +21,10 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link active" aria-current="page" href="/admin_dashboard">Home</a>
                         <a class="nav-link" href="/admin_dashboard/users">Users</a>
                         <a class="nav-link" href="/admin_dashboard/search">Search</a>
-                        <a class="nav-link" href="#">Summary</a>
+                        <a class="nav-link" href="/admin_dashboard/summary">Summary</a>
                         <a class="nav-link" href="/login">Log Out</a>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
         <div id="canvas">
 
             <div class="h2 text-center pt-2 pb-2 mb-3 rounded-3 border border-2 border-primary"
-                style="margin: auto; width: 85%;">Parking Lots</div>
+                style="margin: auto; width: 90%;">Parking Lots</div>
 
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
                 {% for lot in lots %}

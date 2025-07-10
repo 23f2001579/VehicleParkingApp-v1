@@ -8,6 +8,10 @@ from datetime import datetime, timedelta
 import pytz
 ist = pytz.timezone("Asia/Kolkata")
 
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use("Agg")
+
 from .models import *
 
 @app.route("/")
@@ -167,6 +171,10 @@ def user_dashboard():
             duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
         parking_history.append({"booking": event, "lot": lot, "duration": duration })
     return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
+
+@app.route('/admin_dashboard/summary')
+def admin_summary():
+    return render_template("admin_summary.html", user=current_user)
 
 @app.route('/summary')
 def user_summary():
