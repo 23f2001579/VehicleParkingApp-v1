@@ -39,6 +39,7 @@
                         <th scope="col">Vehicle Number</th>
                         <th scope="col">Parking Timestamp</th>
                         <th scope="col">Duration</th>
+                        <th scope="col">Cost</th>
                         <th scope="col">Action</th>
                     </tr>
                 </thead>
@@ -50,6 +51,7 @@
                         <td>{{ event.booking.vehicle_no }}</td>
                         <td>{{ event.booking.parking_timestamp.strftime('%d-%b-%Y %I:%M %p') }}</td>
                         <td>{{ event.duration }}</td>
+                        <td>{{ event.cost }}</td>
                         <td>
                             {% if not event.booking.leaving_timestamp %}
                             <div>

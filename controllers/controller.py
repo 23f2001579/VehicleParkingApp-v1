@@ -174,10 +174,13 @@ def user_dashboard():
     for event in reservations:
         lot = ParkingLot.query.filter_by(id=event.lot_id).first()
         duration='Not yet released'
+        cost = "--"
+        if event.cost:
+            cost=f"Rs.{event.cost}"
         if event.leaving_timestamp!=None:
             total_minutes = int((event.leaving_timestamp - event.parking_timestamp).total_seconds() / 60)
-            duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
-        parking_history.append({"booking": event, "lot": lot, "duration": duration })
+            duration = "{} hrs and {} min".format(total_minutes//60, total_minutes%60 )
+        parking_history.append({"booking": event, "lot": lot, "duration": duration, "cost": cost })
     return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
 
 @app.route("/edit_profile", methods=["GET", "POST"])
