@@ -23,28 +23,47 @@
                     <div class="navbar-nav">
                         <a class="nav-link" href="/user_dashboard">Home</a>
                         <a class="nav-link active" aria-current="page" href="/summary">Summary</a>
-                        <a class="nav-link" href="/login">Log Out</a>
+                        <a class="nav-link" href="/logout">Log Out</a>
                     </div>
                 </div>
             </div>
         </nav>
         <div id="canvas">
-            <div class="h3 text-center pt-2 pb-2 mb-3 rounded-3 border border-2 border-primary" style="margin: auto; width: 85%;">User Summary</div>
-            <div id="form-body" style="width: 85%; margin-top: 0px; margin:auto;">
-                <div class="d-flex mb-3">
-                    <label for="bookings" class="form-label mt-2" style="width:200px">Total Bookings made</label>
-                    <input class="form-control" type="number" name="user_id" value="{{ count }}" 
-                    aria-label="readonly input example" style="width:200px" disabled readonly>
+            <div class="h3 text-center pt-2 pb-2 mb-3 rounded-3 border border-2 border-primary"
+                style="margin: auto; width: 85%;">User Summary</div>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 text-center" style="width: 85%; margin: auto">
+                <div class="col">
+                    <div class="card text-bg-success mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Bookings made</h5>
+                            <h1 class="card-text">{{ count }}</h1>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex mb-3">
-                    <label for="duration" class="form-label mt-2" style="width:200px">Total Parking Duration</label>
-                    <input class="form-control" type="text" name="duration" value="{{ duration }}" 
-                    aria-label="readonly input example" style="width:200px" disabled readonly>
+                <div class="col">
+                    <div class="card text-bg-warning mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Duration Parked</h5>
+                            <h2 class="card-text">{{ duration }}</h1>
+                        </div>
+                    </div>
                 </div>
-                <div class="d-flex mb-3">
-                    <label for="total_cost" class="form-label mt-2" style="width:200px">Total Parking Cost</label>
-                    <input class="form-control" type="text" name="total_cost" value="Rs. {{ cost }}" 
-                    aria-label="readonly input example" style="width:200px" disabled readonly>
+                <div class="col">
+                    <div class="card text-bg-danger mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Parking Cost</h5>
+                            <h1 class="card-text">Rs.{{ cost }}</h1>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div id="body" style="width: 85%; margin-top: 0px; margin:auto;">
+                
+                <div class="mt-4">
+                    <h3 class="mx-5">Parking distribution across Locations</h3>
+                    <img src="/static/users_chart/bar_{{user.id}}.png" alt="Bar chart">
                 </div>
             </div>
         </div>

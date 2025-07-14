@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, url_for
 from flask import current_app as app
-from flask_login import login_user, login_required, login_manager, current_user
+from flask_login import login_user, login_required, login_manager, current_user, logout_user
 
 from sqlalchemy import or_, and_
 
@@ -11,6 +11,9 @@ ist = pytz.timezone("Asia/Kolkata")
 import matplotlib.pyplot as plt
 import matplotlib
 matplotlib.use("Agg")
+fig, ax = plt.subplots(figsize=(6, 4))
+colors = ["tab:red", "tab:blue", "tab:green","tab:orange", "tab:purple", "tab:brown", "gold","lawngreen"]
+
 
 from .models import *
 
@@ -178,14 +181,45 @@ def admin_summary():
 
 @app.route('/summary')
 def user_summary():
-    bookings = Reservation.query.filter_by(user_id=current_user.id)
+    bookings = Reservation.query.filter(Reservation.user_id==current_user.id, Reservation.leaving_timestamp!=None)
     count = bookings.count()
     total_duration_in_sec = sum( [ (i.leaving_timestamp-i.parking_timestamp).total_seconds() for i in bookings ])
-    total_duration = timedelta(seconds=total_duration_in_sec)
+    total_minutes = int(total_duration_in_sec//60)
+    duration = "{} hr & {} min".format(total_minutes//60, total_minutes%60 )
+
     total_cost = sum([i.cost for i in bookings ])
 
+    #graphs
+    #pie chart (generated cards)
+    #labels = ["Aadhar", "Pan", "Driving", "Election"]
+    #sizes = [ga,gp,gd,ge]
+    #colors = ["red", "yellow", "blue", "green"]
+    #plt.pie(sizes, labels=labels, colors=colors, autopct = "%1.1f%%")
+    #plt.title("Generated Cards")
+    #plt.savefig("static/pie.png")
+    #plt.clf()
+    #bar graph (requested cards)
+    
+    used_lots = db.session.query(Reservation.lot_id).filter(Reservation.user_id==current_user.id, Reservation.leaving_timestamp!=None)
+    lots_dict = {}
+    for (l_id,) in used_lots:
+        lot = ParkingLot.query.filter_by(id=l_id).first()
+        name = lot.prime_location_name.strip()
+        if name not in lots_dict:
+            lots_dict[name] = 0
+        lots_dict[name] += 1
+    lots = list(lots_dict.keys())
+    counts = list(lots_dict.values())
+    n = len(lots_dict)
+    ax.bar(lots, counts, color=colors[:n])
+    ax.set_xlabel("Location")
+    ax.set_ylabel("Usage frequency")
+    #plt.title("Parking distribution across Locations")
+    plt.savefig(f"static/users_chart/bar_{current_user.id}.png")
+    plt.close(fig)
+    
     return render_template("user_summary.html", user=current_user, count=count,
-     duration=total_duration, cost=total_cost)
+     duration=duration, cost=total_cost)
 
 @app.route("/add_lot", methods=["GET", "POST"])
 @login_required
