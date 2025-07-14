@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
-    <title>Admin Summary Page HTML</title>
+    <title>Edit Profile HTML</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="../static/style.css">
@@ -13,7 +13,7 @@
     <div id="main">
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Welcome {{user.name}}</a>
+                <a class="navbar-brand" href="#">Welcome {{ user.name }}</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -24,39 +24,42 @@
                         <a class="nav-link" href="/admin_dashboard">Home</a>
                         <a class="nav-link" href="/admin_dashboard/users">Users</a>
                         <a class="nav-link" href="/admin_dashboard/search">Search</a>
-                        <a class="nav-link active" aria-current="page" href="/admin_dashboard/summary">Summary</a>
-                        <a class="nav-link" href="/logout">Log Out</a>
+                        <a class="nav-link" href="/admin_dashboard/summary">Summary</a>
+                        <a class="nav-link" href="/login">Log Out</a>
                     </div>
                 </div>
                 <a class="nav-item" style="color:white; text-decoration: none" href="/edit_profile">Edit Profile</a>
             </div>
         </nav>
         <div id="canvas">
-            <div class="h3 text-center pt-2 pb-2 mb-3 rounded-3 border border-2 border-primary" style="margin: auto; width: 85%;">User Details</div>
+            <div class="h3 text-center pt-2 pb-2 mb-3 rounded-3 border border-2 border-primary" style="margin: auto; width: 85%;">Edit Profile</div>
             <div id="form-body" style="width: 85%; margin-top: 0px; margin:auto;">
+                <form action="/edit_profile" method="post">
                     <div class="mb-3">
-                        <label for="userid" class="form-label">User ID</label>
-                        <input class="form-control" type="text" name="user_id" value="{{ user.id }}"
-                            aria-label="readonly input example" disabled readonly>
+                        <label for="username" class="form-label">Email address(Username)</label>
+                        <input type="email" class="form-control" value="{{ user.username }}"
+                            name="username" disabled readonly>
                     </div>
-                    <div class="mb-3">
-                            <label for="username" class="form-label">Email address(Username)</label>
-                            <input class="form-control" type="text" name="username" value="{{ user.username }}"
-                            aria-label="readonly input example" disabled readonly>
-                        </div>
                     <div class="mb-3">
                         <label for="name" class="form-label">Full Name</label>
-                        <input class="form-control" type="text" name="name" value="{{ user.name }}"
-                            >
+                        <input type="text" class="form-control" name="name" value="{{ user.name }}" required>
                     </div>
                     <div class="mb-3">
-                        <label for="vehicle_no" class="form-label">Address:</label>
-                        <textarea class="form-control" name="address" id="address" rows="3">{{ user.address }}</textarea>
+                        <label for="address" class="form-label">Address</label>
+                        <textarea class="form-control" rows="3"
+                            name="address" required>{{ user.address }}</textarea>
                     </div>
-                
+                    <div class="mb-3">
+                        <label for="pincode" class="form-label">Pincode</label>
+                        <input type="text" class="form-control"  pattern="\d{6}" 
+                        maxlength="6" required placeholder="600xxx" name="pincode" value="{{ user.pincode }}">
+                    </div>
                     <div style="margin-top: 30px;">
                         <input type="submit" class="btn btn-primary" value="Save Changes">
                     </div>
+                    
+
+                </form>
             </div>
         </div>
     </div>

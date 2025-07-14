@@ -180,6 +180,21 @@ def user_dashboard():
         parking_history.append({"booking": event, "lot": lot, "duration": duration })
     return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
 
+@app.route("/edit_profile", methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    if request.method == "POST":
+        this_user = User.query.filter_by(id=current_user.id).first()
+        this_user.name = request.form.get("name")
+        this_user.address = request.form.get("address")
+        this_user.pincode = request.form.get("pincode")
+        db.session.commit()
+        if this_user.type == "admin":
+            return redirect("/admin_dashboard")
+        return redirect("/user_dashboard")
+            
+    return render_template("edit_profile.html",user=current_user)
+
 @app.route('/admin_dashboard/summary')
 def admin_summary():
     return render_template("admin_summary.html", user=current_user)
