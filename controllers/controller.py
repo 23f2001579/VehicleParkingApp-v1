@@ -59,6 +59,11 @@ def register():
             
     return render_template("register.html")
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect("/login")
+
 @app.route('/admin_dashboard')
 @login_required
 def admin_dashboard():
@@ -216,7 +221,7 @@ def user_summary():
     ax.set_ylabel("Usage frequency")
     #plt.title("Parking distribution across Locations")
     plt.savefig(f"static/users_chart/bar_{current_user.id}.png")
-    plt.close(fig)
+    plt.clf()
     
     return render_template("user_summary.html", user=current_user, count=count,
      duration=duration, cost=total_cost)
