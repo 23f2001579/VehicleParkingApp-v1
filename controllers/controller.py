@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, url_for
 from flask import current_app as app
 from flask_login import login_user, login_required, login_manager, current_user, logout_user
 
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, func
 
 from datetime import datetime, timedelta
 import pytz
@@ -197,7 +197,11 @@ def edit_profile():
 
 @app.route('/admin_dashboard/summary')
 def admin_summary():
-    return render_template("admin_summary.html", user=current_user)
+    r_count =Reservation.query.count()
+    s_count = ParkingSpot.query.filter_by(active=1).count()
+    revenue = db.session.query(func.sum(Reservation.cost)).scalar()
+    return render_template("admin_summary.html", user=current_user, r_count=r_count,
+    sp_count=s_count, revenue=revenue)
 
 @app.route('/summary')
 def user_summary():
