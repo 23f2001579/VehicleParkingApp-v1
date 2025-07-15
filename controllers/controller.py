@@ -8,8 +8,8 @@ from datetime import datetime, timedelta
 import pytz
 ist = pytz.timezone("Asia/Kolkata")
 
-import matplotlib.pyplot as plt
 import matplotlib
+import matplotlib.pyplot as plt
 matplotlib.use("Agg")
 fig, ax = plt.subplots(figsize=(6, 4))
 colors = ["tab:red", "tab:blue", "tab:green","tab:orange", "tab:purple", "tab:brown", "gold","lawngreen"]
@@ -232,6 +232,8 @@ def user_summary():
     for (l_id,) in used_lots:
         lot = ParkingLot.query.filter_by(id=l_id).first()
         name = lot.prime_location_name.strip()
+        if len(name)>12:
+            name = name.replace(' ','\n')
         if name not in lots_dict:
             lots_dict[name] = 0
         lots_dict[name] += 1
@@ -241,9 +243,13 @@ def user_summary():
     ax.bar(lots, counts, color=colors[:n])
     ax.set_xlabel("Location")
     ax.set_ylabel("Usage frequency")
+    fig.tight_layout()
+    print(lots_dict, colors[:n],n)
     #plt.title("Parking distribution across Locations")
-    plt.savefig(f"static/users_chart/bar_{current_user.id}.png")
-    plt.clf()
+    fig.savefig(f"static/users_chart/bar_{current_user.id}.png")
+    plt.close(fig)
+    ax.clear()
+    del lots_dict, lots, counts
     
     return render_template("user_summary.html", user=current_user, count=count,
      duration=duration, cost=total_cost)
