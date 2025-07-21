@@ -75,7 +75,7 @@ def admin_dashboard():
         lot_with_avl.append({"info": lot, "total": tot, "occupied": occ})
     return render_template("admin_home.html", lots=lot_with_avl, user=current_user)
 
-@app.route('/delete/<int:lot_id>')
+@app.route('/delete_lot/<int:lot_id>')
 def delete_lot(lot_id):
     ParkingLot.query.filter_by(id=lot_id).first().active = 0
     spots = ParkingSpot.query.filter_by(lot_id=lot_id)
