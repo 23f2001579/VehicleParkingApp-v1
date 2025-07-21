@@ -13,7 +13,7 @@
     <div id="main">
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="#">Welcome {{user.name}}</a>
+                <a class="navbar-brand" href="/admin_dashboard">Welcome {{user.name}}</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -52,12 +52,12 @@
                                         data-bs-target="#lotModal{{ lot.info.id }}">Delete</button>
 
                                     <div class="modal fade" id="lotModal{{ lot.info.id }}" tabindex="-1"
-                                        aria-labelledby="lotModalLabel{{ lot.id }}" aria-hidden="true">
+                                        aria-labelledby="lotModalLabel{{ lot.info.id }}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
 
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="lotModalLabel{{ lot.id }}">Delete
+                                                    <h5 class="modal-title" id="lotModalLabel{{ lot.info.id }}">Delete
                                                         Parking Lot</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                         aria-label="Close"></button>
@@ -71,8 +71,8 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
                                                         data-bs-dismiss="modal">Close</button>
-                                                    <a type="button" class="btn btn-danger" href="/delete/{{ lot.id }}">Delete</a>
-                                                    </div>
+                                                    <a type="button" class="btn btn-danger" href="{{ url_for('delete_lot', lot_id=lot.info.id) }}">Delete</a>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
