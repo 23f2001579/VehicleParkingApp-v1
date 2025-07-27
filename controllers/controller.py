@@ -225,7 +225,19 @@ def admin_summary():
     fig.savefig("static/revenue_pie.png")
     plt.close(fig)
     ax.clear()
-        
+    
+    avl_spots = ParkingSpot.query.filter_by(status='A').count()
+    occ_spots = ParkingSpot.query.filter_by(status='O').count()
+    ax.bar(["Available","Occupied"], [5, occ_spots], color=["tab:green","tab:red"])
+    ax.set_xlabel("hi")
+    ax.set_ylabel("No. of spots")
+    fig.tight_layout()
+    print([avl_spots, occ_spots])
+    #plt.title("Parking distribution across Locations")
+    fig.savefig("static/spots_bar.png")
+    plt.close(fig)
+    ax.clear()
+
 
     return render_template("admin_summary.html", user=current_user, r_count=r_count,
     sp_count=s_count, revenue=revenue)
