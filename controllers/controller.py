@@ -202,7 +202,31 @@ def edit_profile():
 def admin_summary():
     r_count =Reservation.query.count()
     s_count = ParkingSpot.query.filter_by(active=1).count()
-    revenue = db.session.query(func.sum(Reservation.cost)).scalar()
+    revenue = db.session.query(func.sum(Reservation.cost)).scalar() #scalar returns single value inside return query
+
+    lot_records = ParkingLot.query.all()
+    lots_dict = {}
+    for lot in lot_records:
+        lot_name = lot.prime_location_name.strip()
+        lot_revenue = db.session.query(func.sum(Reservation.cost)).filter(Reservation.lot_id==lot.id).scalar() or 0 #to avoid Nonetype err
+        if not lot_revenue: #to avoid no-revenue lots in chart
+            continue
+        if lot_name not in lots_dict:
+            lots_dict[lot_name] = 0
+        lots_dict[lot_name] += lot_revenue
+    print(lots_dict)
+    sorted_data = sorted(lots_dict.items(),key = lambda x:x[1], reverse=True)
+    lots,revenues = list(zip(*sorted_data))
+    print(lots,'\n',revenues)
+    n = len(lots_dict)
+    ax.pie(revenues, labels=lots, colors=colors[:n], autopct = "%1.1f%%")
+    fig.tight_layout()
+    #ax.set_title("Revenue across Lots") title in .html
+    fig.savefig("static/revenue_pie.png")
+    plt.close(fig)
+    ax.clear()
+        
+
     return render_template("admin_summary.html", user=current_user, r_count=r_count,
     sp_count=s_count, revenue=revenue)
 
@@ -249,7 +273,6 @@ def user_summary():
     fig.savefig(f"static/users_chart/bar_{current_user.id}.png")
     plt.close(fig)
     ax.clear()
-    del lots_dict, lots, counts
     
     return render_template("user_summary.html", user=current_user, count=count,
      duration=duration, cost=total_cost)
