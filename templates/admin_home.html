@@ -85,8 +85,9 @@
                                 </div>
                             </div>
 
+                            <p class="text fw-semibold mb-1">{{ lot.info.address }}</p>
                             <p class="text-success fw-semibold">Occupied: {{ lot.occupied }}/{{ lot.total }}</p>
-
+                                    
                             <div class="d-flex flex-wrap gap-2">
                                 {% for spot in lot.info.spots %}
                                 {% if spot.status == 'A' %}
