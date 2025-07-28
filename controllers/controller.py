@@ -16,6 +16,7 @@ colors = ["tab:red", "tab:blue", "tab:green","tab:orange", "tab:purple", "tab:br
 
 
 from .models import *
+import admin_routes, user_routes
 
 @app.route("/")
 def home():
@@ -64,87 +65,6 @@ def logout():
     logout_user()
     return redirect("/login")
 
-@app.route('/admin_dashboard')
-@login_required
-def admin_dashboard():
-    lots = ParkingLot.query.filter_by(active=1) 
-    lot_with_avl = []
-    for lot in lots:
-        tot = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
-        occ = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
-        lot_with_avl.append({"info": lot, "total": tot, "occupied": occ})
-    return render_template("admin_home.html", lots=lot_with_avl, user=current_user)
-
-@app.route('/delete_lot/<int:lot_id>')
-def delete_lot(lot_id):
-    ParkingLot.query.filter_by(id=lot_id).first().active = 0
-    spots = ParkingSpot.query.filter_by(lot_id=lot_id)
-    for spot in spots:
-        spot.active=0
-        spot.status='I'
-    db.session.commit()
-    return redirect("/admin_dashboard")
-    
-
-@app.route('/admin_dashboard/users')
-@login_required
-def admin_users():
-    user_list = User.query.filter_by(type="general")
-    return render_template("admin_users.html", user=current_user, list = user_list)
-
-@app.route('/admin_dashboard/search', methods=["GET","POST"])
-@login_required
-def admin_search():
-    if request.method == "POST":
-        searchtype =request.form.get("type")
-        kword=request.form.get("keyword")
-
-        if searchtype=="1":
-            user_list=User.query.filter(
-                User.username.ilike(f"%{kword}%") |
-                User.id.ilike(f"%{kword}%") |
-                User.name.ilike(f"%{kword}%")
-            ).all()
-            return render_template("admin_search.html", user=current_user, users=user_list, keyword=kword)
-        
-        elif searchtype=="2":
-            lots = ParkingLot.query.filter(
-                ParkingLot.prime_location_name.ilike(f"%{kword}%") |
-                ParkingLot.address.ilike(f"%{kword}%") |
-                ParkingLot.pincode.ilike(f"%{kword}%")
-            ).all()
-            lots = ParkingLot.query.filter(
-                and_(ParkingLot.active == 1,
-                    or_(ParkingLot.prime_location_name.ilike(f"%{kword}%"),
-                        ParkingLot.address.ilike(f"%{kword}%"),
-                        ParkingLot.pincode.ilike(f"%{kword}%") ))).all()
-            lot_with_avl = []
-            for lot in lots:
-                tot = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
-                occ = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
-                lot_with_avl.append({"info": lot, "total": tot, "occupied": occ})
-            return render_template("admin_search.html", user=current_user, lots=lot_with_avl, keyword=kword)
-    return render_template("admin_search.html", user=current_user)
-
-@app.route('/user_details/<int:user_id>', methods=["GET","POST"])
-def user_details(user_id):
-    user=User.query.filter_by(id=user_id).first()
-    reservations = Reservation.query.filter_by(user_id=user_id)
-    parking_history = []
-    for event in reservations:
-        lot = ParkingLot.query.filter_by(id=event.lot_id).first()
-        duration='Not yet released'
-        if event.leaving_timestamp!=None:
-            total_minutes = int((event.leaving_timestamp - event.parking_timestamp).total_seconds() / 60)
-            duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
-        parking_history.append({"booking": event, "lot": lot, "duration": duration })
-
-    if request.method == "POST":
-        user.name=request.form.get("name")
-        user.address=request.form.get("address")
-        db.session.commit()
-        return redirect(url_for("user_details", user_id=user.id))
-    return render_template("user_details.html",user=user, history=parking_history)
 
 @app.route("/user_dashboard", methods=["GET", "POST"])
 @login_required
