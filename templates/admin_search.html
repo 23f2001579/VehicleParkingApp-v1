@@ -36,123 +36,190 @@
                 <form class="d-flex align-items-center justify-content-center flex-row mb-3"
                 role="search" method="post">
                     <p class="h5 mb-1 mt-1 mx-2">Search by</p>
-                    <select class="form-select" name="type" aria-label="search" style="width: 130px;">
+                    <select class="form-select" name="type" aria-label="search" style="width: 138px;">
                         <option selected value="1">User</option>
                         <option value="2">Parking Lot</option>
+                        <option value="3">Parking Spot</option>
                     </select>
                     <input class="form-control p-2 mx-2" type="search" placeholder="Search" 
                     name="keyword" aria-label="Search" style="width: 220px;"/>
                     <button class="btn btn-outline-success p-2" type="submit">Search</button>
                 </form>
             </div>
-            {% if users %}
-            <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 90%;">
-            Search Results for "{{keyword}}" in Users
-            </div>
-            <table class="table table-striped table-borderless" style="margin: auto; width: 90%; border: 2px; margin-top: 20px;">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Pincode</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in users %}
-                    <tr>
-                        <th scope="row"> <a href="/user_details/{{ user.id }}" style="text-decoration: none">{{ user.id }}</a></th>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>{{ user.address }}</td>
-                        <td>{{ user.pincode }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            {% elif lots %}
-            <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 90%;">
-            Search Results for "{{keyword}}" in Parking Lots
-            </div>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
-                {% for lot in lots %}
-                <div class="col">
-                    <div class="card h-200 shadow-sm">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <h5 class="card-title mb-0" style="max-width: 160px">{{ lot.info.prime_location_name }}</h5>
-                                <div>
-                                    <a href="{{ url_for('edit_lot', lot_id=lot.info.id) }}" type="button"
-                                        class="btn btn-outline-primary me-2">Edit</a>
-                                    
-                                    {% if lot.occupied==0 %}
-                                    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
-                                        data-bs-target="#lotModal{{ lot.info.id }}">Delete</button>
+            {% if search=='1' %}
+                <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 90%;">
+                Search Results for "{{keyword}}" in Users
+                </div>
+                {% if users %}
+                    <table class="table table-striped table-borderless" style="margin: auto; width: 90%; border: 2px; margin-top: 20px;">
+                        <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Full Name</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Pincode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <th scope="row"> <a href="/user_details/{{ user.id }}" style="text-decoration: none">{{ user.id }}</a></th>
+                                <td>{{ user.username }}</td>
+                                <td>{{ user.name }}</td>
+                                <td>{{ user.address }}</td>
+                                <td>{{ user.pincode }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="display-6 text-center mt-3" style="width: 90%; margin: auto;">
+                    No Results
+                    </div>
+                    <div class="text-center mt-2" style="width: 90%; margin: auto;">
+                    Try adjusting your search filters
+                    </div>
+                {% endif %}
 
-                                    <div class="modal fade" id="lotModal{{ lot.info.id }}" tabindex="-1"
-                                        aria-labelledby="lotModalLabel{{ lot.id }}" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
 
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="lotModalLabel{{ lot.id }}">Delete
-                                                        Parking Lot</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
+            {% elif search=='2' %}
+                <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 90%;">
+                Search Results for "{{keyword}}" in Parking Lots
+                </div>
+                {% if lots %}
+                    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2">
+                        {% for lot in lots %}
+                        <div class="col">
+                            <div class="card h-200 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h5 class="card-title mb-0" style="max-width: 160px">{{ lot.info.prime_location_name }}</h5>
+                                        <div>
+                                            <a href="{{ url_for('edit_lot', lot_id=lot.info.id) }}" type="button"
+                                                class="btn btn-outline-primary me-2">Edit</a>
+                                            
+                                            {% if lot.occupied==0 %}
+                                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal"
+                                                data-bs-target="#lotModal{{ lot.info.id }}">Delete</button>
 
-                                                <div class="modal-body">
-                                                    Deleting this lot will result in automatic deletion of the spots
-                                                    contained in this lot.
-                                                </div>
+                                            <div class="modal fade" id="lotModal{{ lot.info.id }}" tabindex="-1"
+                                                aria-labelledby="lotModalLabel{{ lot.id }}" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
 
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-bs-dismiss="modal">Close</button>
-                                                    <a type="button" class="btn btn-danger" href="/delete/{{ lot.id }}">Delete</a>
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="lotModalLabel{{ lot.id }}">Delete
+                                                                Parking Lot</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            Deleting this lot will result in automatic deletion of the spots
+                                                            contained in this lot.
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <a type="button" class="btn btn-danger" href="/delete/{{ lot.id }}">Delete</a>
+                                                            </div>
                                                     </div>
+                                                </div>
                                             </div>
+                                            {% else %}
+                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover">
+                                                <button class="btn btn-outline-danger" type="button" disabled>Delete</button>
+                                            </span>
+                                            {% endif %}
+
                                         </div>
                                     </div>
-                                    {% else %}
-                                    <span class="d-inline-block" tabindex="0" data-bs-toggle="popover" data-bs-trigger="hover focus" data-bs-content="Disabled popover">
-                                        <button class="btn btn-outline-danger" type="button" disabled>Delete</button>
-                                    </span>
-                                    {% endif %}
 
+                                    <p class="text fw-semibold mb-1">{{ lot.info.address }}</p>
+                                    <p class="text-success fw-semibold">Occupied: {{ lot.occupied }}/{{ lot.total }}</p>
+                                    
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for spot in lot.info.spots %}
+                                        {% if spot.status == 'A' %}
+                                        <a class="badge bg-success p-3" href="{{ url_for('view_spot', spot_id=spot.id) }}"
+                                            style="text-decoration:none;">A</a>
+
+                                        {% elif spot.status == 'O' %}
+                                        <a class="badge bg-danger p-3" href="{{ url_for('view_spot', spot_id=spot.id) }}"
+                                            style="text-decoration:none;">O</a>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
-
-                            <p class="text-success fw-semibold">Occupied: {{ lot.occupied }}/{{ lot.total }}</p>
-
-                            <div class="d-flex flex-wrap gap-2">
-                                {% for spot in lot.info.spots %}
-                                {% if spot.status == 'A' %}
-                                <a class="badge bg-success p-3" href="{{ url_for('view_spot', spot_id=spot.id) }}"
-                                    style="text-decoration:none;">A</a>
-
-                                {% elif spot.status == 'O' %}
-                                <a class="badge bg-danger p-3" href="{{ url_for('view_spot', spot_id=spot.id) }}"
-                                    style="text-decoration:none;">O</a>
-                                {% endif %}
-                                {% endfor %}
-                            </div>
                         </div>
+                        {% endfor %}
                     </div>
+                {% else %}
+                <div class="display-6 text-center mt-3" style="width: 90%; margin: auto;">
+                    No Results
+                    </div>
+                    <div class="text-center mt-2" style="width: 90%; margin: auto;">
+                    Try adjusting your search filters
+                    </div>
+                {% endif %}
+
+
+            {% elif search=='3' %}
+                <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 90%;">
+                Search Results for "{{keyword}}" in Parking Spots
                 </div>
-                {% endfor %}
-            </div>
+                {% if spots %}
+                    <table class="table table-striped table-borderless" style="margin: auto; width: 90%; border: 2px; margin-top: 20px;">
+                        <thead>
+                            <tr>
+                                <th scope="col">Spot ID</th>
+                                <th scope="col">Lot ID</th>
+                                <th scope="col">Location</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Availability</th>
+                                <th scope="col">Pincode</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for spot in spots %}
+                            <tr>
+                                <th scope="row"> {{ spot[0].id }}</a></th>
+                                <td>{{ spot[1].id }}</td>
+                                <td>{{ spot[1].prime_location_name }}</td>
+                                <td>{{ spot[1].address }}</td>
+                                {% if spot[0].status=='A' %}
+                                <td><h6><a href="{{ url_for('view_spot', spot_id=spot[0].id) }}"
+                                    style="text-decoration:none;color: green;">Available</a></h6></td>
+                                {% else %}
+                                <td><h6><a href="{{ url_for('view_spot', spot_id=spot[0].id) }}"
+                                    style="text-decoration:none;color: crimson;">Occupied</a></h6></td>
+                                {% endif %}
+                                <td>{{ spot[1].pincode }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="display-6 text-center mt-3" style="width: 90%; margin: auto;">
+                    No Results
+                    </div>
+                    <div class="text-center mt-2" style="width: 90%; margin: auto;">
+                    Try adjusting your search filters
+                    </div>
+                {% endif %}
             {% else %}
-            <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 90%;">
-            Search Results
-            </div>
-            <div class="display-6 text-center mt-3" style="width: 90%; margin: auto;">
-            No Results
-            </div>
-            <div class="text-center mt-2" style="width: 90%; margin: auto;">
-            Try adjusting your search filters
-            </div>
+                <div class="h4 pb-2 mt-4 mb-4 text-dark border-bottom border-dark" style="margin: auto; width: 90%;">
+                Search Results
+                </div>
+                <div class="display-6 text-center mt-3" style="width: 90%; margin: auto;">
+                No Results
+                </div>
+                <div class="text-center mt-2" style="width: 90%; margin: auto;">
+                Try adjusting your search filters
+                </div>
             {% endif %}
             
 
