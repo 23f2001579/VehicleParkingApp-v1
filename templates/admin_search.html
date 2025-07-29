@@ -36,11 +36,25 @@
                 <form class="d-flex align-items-center justify-content-center flex-row mb-3"
                 role="search" method="post">
                     <p class="h5 mb-1 mt-1 mx-2">Search by</p>
+                    {% if search=='2'%}
+                    <select class="form-select" name="type" aria-label="search" style="width: 138px;">
+                        <option value="1">User</option>
+                        <option selected value="2">Parking Lot</option>
+                        <option value="3">Parking Spot</option>
+                    </select>
+                    {% elif search=='3' %}
+                    <select class="form-select" name="type" aria-label="search" style="width: 138px;">
+                        <option value="1">User</option>
+                        <option value="2">Parking Lot</option>
+                        <option selected value="3">Parking Spot</option>
+                    </select>
+                    {% else %}
                     <select class="form-select" name="type" aria-label="search" style="width: 138px;">
                         <option selected value="1">User</option>
                         <option value="2">Parking Lot</option>
                         <option value="3">Parking Spot</option>
                     </select>
+                    {% endif %}
                     <input class="form-control p-2 mx-2" type="search" placeholder="Search" 
                     name="keyword" aria-label="Search" style="width: 220px;"/>
                     <button class="btn btn-outline-success p-2" type="submit">Search</button>
