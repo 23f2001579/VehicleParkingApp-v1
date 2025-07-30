@@ -55,6 +55,7 @@ def user_dashboard():
     return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
 
 @app.route('/summary')
+@login_required
 def user_summary():
     bookings = Reservation.query.filter(Reservation.user_id==current_user.id, Reservation.leaving_timestamp!=None)
     count = bookings.count()

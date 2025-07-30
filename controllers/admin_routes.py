@@ -30,6 +30,7 @@ def admin_dashboard():
     return render_template("admin_home.html", lots=lot_with_avl, user=current_user)
 
 @app.route('/delete_lot/<int:lot_id>')
+@login_required
 def delete_lot(lot_id):
     ParkingLot.query.filter_by(id=lot_id).first().active = 0
     spots = ParkingSpot.query.filter_by(lot_id=lot_id)
@@ -96,10 +97,12 @@ def admin_search():
     return render_template("admin_search.html", user=current_user)
 
 @app.route('/admin_dashboard/parking_history', methods=["GET","POST"])
+@login_required
 def parking_history():
     return render_template("parking_history.html", user=current_user)
 
 @app.route('/user_details/<int:user_id>', methods=["GET","POST"])
+@login_required
 def user_details(user_id):
     user=User.query.filter_by(id=user_id).first()
     reservations = Reservation.query.filter_by(user_id=user_id)
@@ -121,6 +124,7 @@ def user_details(user_id):
 
 
 @app.route('/admin_dashboard/summary')
+@login_required
 def admin_summary():
     r_count =Reservation.query.count()
     s_count = ParkingSpot.query.filter_by(active=1).count()
