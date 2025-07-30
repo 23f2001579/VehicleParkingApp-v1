@@ -96,11 +96,6 @@ def admin_search():
 
     return render_template("admin_search.html", user=current_user)
 
-@app.route('/admin_dashboard/parking_history', methods=["GET","POST"])
-@login_required
-def parking_history():
-    return render_template("parking_history.html", user=current_user)
-
 @app.route('/user_details/<int:user_id>', methods=["GET","POST"])
 @login_required
 def user_details(user_id):
