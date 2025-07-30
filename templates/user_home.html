@@ -34,7 +34,7 @@
             <table class="table" style="margin: auto; width: 85%; border: 2px;">
                 <thead>
                     <tr>
-                        <th scope="col">ID</th>
+                        <th scope="col">SpotID</th>
                         <th scope="col">Location</th>
                         <th scope="col">Vehicle Number</th>
                         <th scope="col">Parking Timestamp</th>
@@ -46,7 +46,7 @@
                 <tbody>
                     {% for event in history %}
                     <tr>
-                        <th scope="row">{{ event.lot.id }}</th>
+                        <th>{{ event.booking.spot_id }}</th>
                         <td>{{ event.lot.prime_location_name }}</td>
                         <td>{{ event.booking.vehicle_no }}</td>
                         <td>{{ event.booking.parking_timestamp.strftime('%d-%b-%Y %I:%M %p') }}</td>
