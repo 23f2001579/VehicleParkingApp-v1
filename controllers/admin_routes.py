@@ -62,11 +62,6 @@ def admin_search():
         
         elif searchtype=="2":
             lots = ParkingLot.query.filter(
-                ParkingLot.prime_location_name.ilike(f"%{kword}%") |
-                ParkingLot.address.ilike(f"%{kword}%") |
-                ParkingLot.pincode.ilike(f"%{kword}%")
-            ).all()
-            lots = ParkingLot.query.filter(
                 and_(ParkingLot.active == 1,
                     or_(ParkingLot.prime_location_name.ilike(f"%{kword}%"),
                         ParkingLot.address.ilike(f"%{kword}%"),
@@ -80,12 +75,29 @@ def admin_search():
     
         elif searchtype=="3":
             spots = ParkingSpot.query.filter(
-                ParkingSpot.id.ilike(f"%{kword}%")
-            ).all()
+                and_(ParkingSpot.id.ilike(f"%{kword}%"),
+                    ParkingSpot.active==1)).all()
+            lots = ParkingLot.query.filter(
+                and_(ParkingLot.active == 1,
+                    or_(ParkingLot.prime_location_name.ilike(f"%{kword}%"),
+                        ParkingLot.address.ilike(f"%{kword}%"),
+                        ParkingLot.pincode.ilike(f"%{kword}%") ))).all()
+            for lot in lots:
+                extras = ParkingSpot.query.filter_by(lot_id=lot.id)
+                for spot in extras:
+                    if spot not in spots and spot.active==1:
+                        spots.append(spot)
+            
+            spotswithlots = [(spot, ParkingLot.query.filter_by(id=spot.lot_id).first()) for spot in spots]
+            
 
-            return render_template("admin_search.html", user=current_user, spots=spots, keyword=kword, search=searchtype)
+            return render_template("admin_search.html", user=current_user, spots=spotswithlots, keyword=kword, search=searchtype)
 
     return render_template("admin_search.html", user=current_user)
+
+@app.route('/admin_dashboard/parking_history', methods=["GET","POST"])
+def parking_history():
+    return render_template("parking_history.html", user=current_user)
 
 @app.route('/user_details/<int:user_id>', methods=["GET","POST"])
 def user_details(user_id):
@@ -106,54 +118,6 @@ def user_details(user_id):
         db.session.commit()
         return redirect(url_for("user_details", user_id=user.id))
     return render_template("user_details.html",user=user, history=parking_history)
-
-
-@app.route('/summary')
-def user_summary():
-    bookings = Reservation.query.filter(Reservation.user_id==current_user.id, Reservation.leaving_timestamp!=None)
-    count = bookings.count()
-    total_duration_in_sec = sum( [ (i.leaving_timestamp-i.parking_timestamp).total_seconds() for i in bookings ])
-    total_minutes = int(total_duration_in_sec//60)
-    duration = "{} hr & {} min".format(total_minutes//60, total_minutes%60 )
-
-    total_cost = sum([i.cost for i in bookings ])
-
-    #graphs
-    #pie chart (generated cards)
-    #labels = ["Aadhar", "Pan", "Driving", "Election"]
-    #sizes = [ga,gp,gd,ge]
-    #colors = ["red", "yellow", "blue", "green"]
-    #plt.pie(sizes, labels=labels, colors=colors, autopct = "%1.1f%%")
-    #plt.title("Generated Cards")
-    #plt.savefig("static/pie.png")
-    #plt.clf()
-    #bar graph (requested cards)
-    
-    used_lots = db.session.query(Reservation.lot_id).filter(Reservation.user_id==current_user.id, Reservation.leaving_timestamp!=None)
-    lots_dict = {}
-    for (l_id,) in used_lots:
-        lot = ParkingLot.query.filter_by(id=l_id).first()
-        name = lot.prime_location_name.strip()
-        if len(name)>12:
-            name = name.replace(' ','\n')
-        if name not in lots_dict:
-            lots_dict[name] = 0
-        lots_dict[name] += 1
-    lots = list(lots_dict.keys())
-    counts = list(lots_dict.values())
-    n = len(lots_dict)
-    ax.bar(lots, counts, color=colors[:n])
-    ax.set_xlabel("Location")
-    ax.set_ylabel("Usage frequency")
-    fig.tight_layout()
-    print(lots_dict, colors[:n],n)
-    #plt.title("Parking distribution across Locations")
-    fig.savefig(f"static/users_chart/bar_{current_user.id}.png")
-    plt.close(fig)
-    ax.clear()
-    
-    return render_template("user_summary.html", user=current_user, count=count,
-     duration=duration, cost=total_cost)
 
 
 @app.route('/admin_dashboard/summary')
@@ -183,19 +147,6 @@ def admin_summary():
     fig.savefig("static/revenue_pie.png")
     plt.close(fig)
     ax.clear()
-    
-    avl_spots = ParkingSpot.query.filter_by(status='A').count()
-    occ_spots = ParkingSpot.query.filter_by(status='O').count()
-    ax.bar(["Available","Occupied"], [5, occ_spots], color=["tab:green","tab:red"])
-    ax.set_xlabel("hi")
-    ax.set_ylabel("No. of spots")
-    fig.tight_layout()
-    print([avl_spots, occ_spots])
-    #plt.title("Parking distribution across Locations")
-    fig.savefig("static/spots_bar.png")
-    plt.close(fig)
-    ax.clear()
-
 
     return render_template("admin_summary.html", user=current_user, r_count=r_count,
     sp_count=s_count, revenue=revenue)

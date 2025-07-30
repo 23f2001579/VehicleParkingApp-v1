@@ -54,6 +54,43 @@ def user_dashboard():
         parking_history.append({"booking": event, "lot": lot, "duration": duration, "cost": cost })
     return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
 
+@app.route('/summary')
+def user_summary():
+    bookings = Reservation.query.filter(Reservation.user_id==current_user.id, Reservation.leaving_timestamp!=None)
+    count = bookings.count()
+    total_duration_in_sec = sum( [ (i.leaving_timestamp-i.parking_timestamp).total_seconds() for i in bookings ])
+    total_minutes = int(total_duration_in_sec//60)
+    duration = "{} hr & {} min".format(total_minutes//60, total_minutes%60 )
+
+    total_cost = sum([i.cost for i in bookings ])
+
+
+    used_lots = db.session.query(Reservation.lot_id).filter(Reservation.user_id==current_user.id, Reservation.leaving_timestamp!=None)
+    lots_dict = {}
+    for (l_id,) in used_lots:
+        lot = ParkingLot.query.filter_by(id=l_id).first()
+        name = lot.prime_location_name.strip()
+        if len(name)>12:
+            name = name.replace(' ','\n')
+        if name not in lots_dict:
+            lots_dict[name] = 0
+        lots_dict[name] += 1
+    lots = list(lots_dict.keys())
+    counts = list(lots_dict.values())
+    n = len(lots_dict)
+    ax.bar(lots, counts, color=colors[:n])
+    ax.set_xlabel("Location")
+    ax.set_ylabel("Usage frequency")
+    fig.tight_layout()
+    print(lots_dict, colors[:n],n)
+    #plt.title("Parking distribution across Locations")
+    fig.savefig(f"static/users_chart/bar_{current_user.id}.png")
+    plt.close(fig)
+    ax.clear()
+    
+    return render_template("user_summary.html", user=current_user, count=count,
+     duration=duration, cost=total_cost)
+
 @app.route("/book_spot/<int:lot_id>", methods=["GET", "POST"])
 @login_required
 def book_spot(lot_id):
