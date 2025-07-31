@@ -9,22 +9,52 @@
 ## Project Overview
 
 This project is part of the **Modern Application Development - I** course at **IIT Madras** and focuses on building a multi-user web application for **Vehicle Parking**. It is a multi-user app (one requires an administrator and other users) that manages different parking lots, parking spots and parked vehicles.
- 
-
-## Screenshots
-
-
-
-
-
 
 
 ### Key Features:
-- Customers can request services from their chosen professional.
-- Professionals can either accept or reject service requests.
-- After service completion, customers can mark the request as closed and provide feedback.
-- Admins have full control to create services, manage customer/professional profiles, and more.
-- The application is extendable and scalable to integrate additional secure features.
+
+🚘 1. User Registration and Login
+Register with personal details (name, address, etc.).
+Secure login with session management using Flask-Login.
+Supports admin and general user roles.
+
+🅿️ 2. Parking Lot & Spot Management
+Admins can:
+Create and manage parking lots (location, price, capacity).
+Manage individual spots within each lot.
+Control status (Available / Reserved) and activation of spots.
+
+📝 3. Reservation System
+Users can:
+Book parking spots in available lots.
+Provide vehicle number and view real-time availability.
+View past reservations.
+System auto-calculates:
+Parking duration
+Cost
+
+📊 4. User Dashboard & Usage Summary
+Personalized user dashboard includes:
+Number of bookings
+Total time parked
+Total cost incurred
+Bar charts generated using matplotlib for usage visualization.
+
+📈 5. Admin Dashboard & Analytics
+Admin has access to:
+All user reservations
+Revenue summary per lot (pie charts)
+High-demand lots and usage trends
+
+🗃️ 6. Database (SQLite)
+Lightweight SQLite database used.
+Schema supports foreign keys, relationships, and is easy to migrate.
+Data can be backed up or restored easily via CSV or SQL dumps.
+
+🎨 7. Frontend UI
+Developed using HTML, CSS, and Bootstrap 5.
+Responsive design optimized for desktop and mobile.
+Background includes cartoon-style parking visuals for modern aesthetic.
 
 ---
 
@@ -88,8 +118,8 @@ The project follows a modular structure for easy maintainability:
 ### Setup Instructions:
 1. Clone the repository:
 ```bash
-git clone https://github.com/23f2001579/VehicleParkingApp.git
-cd mad1project
+git clone https://github.com/23f2001579/VehicleParkingApp-v1.git
+cd VehicleParkingApp-v1
  ```
 2. Create a virtual environment:
 ```bash
@@ -123,7 +153,7 @@ The script will automatically add the following sample data:
 - A set of Parking Lots.
 - A set of Parking Spots.
 
-You can modify the createdb.py script to add more sample data as needed.
+You can modify the load_data.py script to add more sample data as needed.
 
 
 ### Login:
