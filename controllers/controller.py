@@ -21,7 +21,7 @@ def login():
                     return redirect("/user_dashboard")
             return "Incorrect password"
         return "Invalid user"
-    return render_template("login.html")
+    return render_template("auth/login.html")
 
 @app.route("/register", methods=["GET", "POST"]) #url with specific http method gives specific
 def register():
@@ -41,7 +41,7 @@ def register():
             db.session.commit()
             return redirect("/login")
             
-    return render_template("register.html")
+    return render_template("auth/register.html")
 
 @app.route("/logout")
 def logout():

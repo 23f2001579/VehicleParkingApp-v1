@@ -27,7 +27,7 @@ def admin_dashboard():
         tot = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
         occ = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
         lot_with_avl.append({"info": lot, "total": tot, "occupied": occ})
-    return render_template("admin_home.html", lots=lot_with_avl, user=current_user)
+    return render_template("admin/admin_home.html", lots=lot_with_avl, user=current_user)
 
 @app.route('/delete_lot/<int:lot_id>')
 @login_required
@@ -44,7 +44,7 @@ def delete_lot(lot_id):
 @login_required
 def admin_users():
     user_list = User.query.filter_by(type="general")
-    return render_template("admin_users.html", user=current_user, list = user_list)
+    return render_template("admin/admin_users.html", user=current_user, list = user_list)
 
 @app.route('/admin_dashboard/search', methods=["GET","POST"])
 @login_required
@@ -59,7 +59,7 @@ def admin_search():
                 User.id.ilike(f"%{kword}%") |
                 User.name.ilike(f"%{kword}%")
             ).all()
-            return render_template("admin_search.html", user=current_user, users=user_list, keyword=kword, search=searchtype)
+            return render_template("admin/admin_search.html", user=current_user, users=user_list, keyword=kword, search=searchtype)
         
         elif searchtype=="2":
             lots = ParkingLot.query.filter(
@@ -72,7 +72,7 @@ def admin_search():
                 tot = ParkingSpot.query.filter_by(lot_id=lot.id, active=1).count()
                 occ = ParkingSpot.query.filter_by(lot_id=lot.id, status='O').count()
                 lot_with_avl.append({"info": lot, "total": tot, "occupied": occ})
-            return render_template("admin_search.html", user=current_user, lots=lot_with_avl, keyword=kword, search=searchtype)
+            return render_template("admin/admin_search.html", user=current_user, lots=lot_with_avl, keyword=kword, search=searchtype)
     
         elif searchtype=="3":
             spots = ParkingSpot.query.filter(
@@ -92,9 +92,9 @@ def admin_search():
             spotswithlots = [(spot, ParkingLot.query.filter_by(id=spot.lot_id).first()) for spot in spots]
             
 
-            return render_template("admin_search.html", user=current_user, spots=spotswithlots, keyword=kword, search=searchtype)
+            return render_template("admin/admin_search.html", user=current_user, spots=spotswithlots, keyword=kword, search=searchtype)
 
-    return render_template("admin_search.html", user=current_user)
+    return render_template("admin/admin_search.html", user=current_user)
 
 @app.route('/user_details/<int:user_id>', methods=["GET","POST"])
 @login_required
@@ -115,7 +115,7 @@ def user_details(user_id):
         user.address=request.form.get("address")
         db.session.commit()
         return redirect(url_for("user_details", user_id=user.id))
-    return render_template("user_details.html",user=user, history=parking_history)
+    return render_template("admin/user_details.html",user=user, history=parking_history)
 
 
 @app.route('/admin_dashboard/summary')
@@ -143,11 +143,11 @@ def admin_summary():
     ax.pie(revenues, labels=lots, colors=colors[:n], autopct = "%1.1f%%")
     fig.tight_layout()
     #ax.set_title("Revenue across Lots") title in .html
-    fig.savefig("static/revenue_pie.png")
+    fig.savefig("static/img/revenue_pie.png")
     plt.close(fig)
     ax.clear()
 
-    return render_template("admin_summary.html", user=current_user, r_count=r_count,
+    return render_template("admin/admin_summary.html", user=current_user, r_count=r_count,
     sp_count=s_count, revenue=revenue)
 
 
@@ -174,9 +174,9 @@ def add_lot():
         db.session.commit()
 
         return redirect("/admin_dashboard")
-        return render_template("admin_home.html",user=this_user)
+        return render_template("admin/admin_home.html",user=this_user)
             
-    return render_template("new_lot.html")
+    return render_template("admin/new_lot.html")
 
 @app.route("/edit_lot/<int:lot_id>", methods=["GET", "POST"])
 @login_required
@@ -217,7 +217,7 @@ def edit_lot(lot_id):
         db.session.commit()
         return redirect("/admin_dashboard")
 
-    return render_template("edit_lot.html",lot=this_lot)
+    return render_template("admin/edit_lot.html",lot=this_lot)
 
 
 @app.route("/view_spot/<int:spot_id>", methods=["GET", "POST"])
@@ -233,7 +233,7 @@ def view_spot(spot_id):
         db.session.commit()
         return redirect("/admin_dashboard")
 
-    return render_template("view_spot.html", spot=this_spot)
+    return render_template("admin/view_spot.html", spot=this_spot)
 
 @app.route("/spot_details/<int:spot_id>")
 @login_required
@@ -247,4 +247,4 @@ def spot_details(spot_id):
     duration = "{} hour(s) and {} minute(s)".format(total_minutes//60, total_minutes%60 )
     
     cost = int(booking.parking_price * total_minutes / 60 )
-    return render_template("spot_details.html", spot=this_spot, booking=booking, cost=cost, user=current_user, customer=customer)
+    return render_template("admin/spot_details.html", spot=this_spot, booking=booking, cost=cost, user=current_user, customer=customer)

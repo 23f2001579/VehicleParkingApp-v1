@@ -52,7 +52,7 @@ def user_dashboard():
             total_minutes = int((event.leaving_timestamp - event.parking_timestamp).total_seconds() / 60)
             duration = "{} hrs and {} min".format(total_minutes//60, total_minutes%60 )
         parking_history.append({"booking": event, "lot": lot, "duration": duration, "cost": cost })
-    return render_template("user_home.html", lots=lots_avl, user=current_user, history=parking_history)
+    return render_template("user/user_home.html", lots=lots_avl, user=current_user, history=parking_history)
 
 @app.route('/summary')
 @login_required
@@ -85,11 +85,11 @@ def user_summary():
     fig.tight_layout()
     print(lots_dict, colors[:n],n)
     #plt.title("Parking distribution across Locations")
-    fig.savefig(f"static/users_chart/bar_{current_user.id}.png")
+    fig.savefig(f"static/img/users_chart/bar_{current_user.id}.png")
     plt.close(fig)
     ax.clear()
     
-    return render_template("user_summary.html", user=current_user, count=count,
+    return render_template("user/user_summary.html", user=current_user, count=count,
      duration=duration, cost=total_cost)
 
 @app.route("/book_spot/<int:lot_id>", methods=["GET", "POST"])
@@ -110,7 +110,7 @@ def book_spot(lot_id):
 
         return redirect("/user_dashboard")
 
-    return render_template("book_spot.html", lot=this_lot, user=current_user, spot=avl_spot)
+    return render_template("user/book_spot.html", lot=this_lot, user=current_user, spot=avl_spot)
 
 @app.route("/release_spot/<int:booking_id>", methods=["GET", "POST"])
 @login_required
@@ -134,7 +134,7 @@ def release_spot(booking_id):
 
         return redirect("/user_dashboard")
 
-    return render_template("release_spot.html", booking=booking, 
+    return render_template("user/release_spot.html", booking=booking, 
         current_time=now, cost=cost, duration=duration )
 
 
@@ -151,4 +151,4 @@ def edit_profile():
             return redirect("/admin_dashboard")
         return redirect("/user_dashboard")
             
-    return render_template("edit_profile.html",user=current_user)
+    return render_template("user/edit_profile.html",user=current_user)

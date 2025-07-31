@@ -32,7 +32,7 @@
         <div id="canvas">
             <div class="h3 text-center pt-2 pb-2 mb-3 rounded-3 border border-2 border-primary" style="margin: auto; width: 85%;">Recent Parking History</div>
             <table class="table" style="margin: auto; width: 85%; border: 2px;">
-                <thead>
+                <thead class="table-dark">
                     <tr>
                         <th scope="col">SpotID</th>
                         <th scope="col">Location</th>
@@ -68,6 +68,15 @@
                     {% endfor %}
                 </tbody>
             </table>
+            {% if not history %}
+                    <div class="display-6 text-center mt-3" style="width: 90%; margin: auto;">
+                    No Bookings Yet
+                    </div>
+                    <div class="text-center mt-2" style="width: 90%; margin: auto;">
+                    Try exploring lots below
+                    </div>
+                {% endif %}
+
             <br>
             <div class="h3 text-center pt-2 pb-2 mt-3 mb-3 rounded-3 border border-2 border-primary" style="margin: auto; width: 85%;">View Parking Lots</div>
 
@@ -80,7 +89,7 @@
                     </form>
                 </div>
             <table class="table" style="margin: auto; width: 85%; border: 2px;">
-                <thead>
+                <thead class="table-dark">
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">Prime Location</th>
