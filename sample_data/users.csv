@@ -1,0 +1,15 @@
+id,username,password,name,address,type,pincode
+2,anshul@user.com,1234,Anshul L,"AB street, 
+JK Nagar, 
+Chennai",general,630002
+3,bobby@user.com,1234,Bobby Simha,"XYZ street,
+KK nagar,
+Chennai",general,600003
+4,charlotte@user.com,1234,Charlotte Doppler,"RF street, 
+Nungambakkam, 
+Chennai",general,600005
+5,latha@user.com,ABC123,Latha Sri,XYZ,general,630002
+6,jegan@user.com,1234,Jeyaraj,abc,general,600010
+7,gunal@user.com,Gowri,Gunal Aditya,Arumbakkam,general,603110
+8,darcy@user.com,1234,Darcy Lewis,"45, Nova Quarters, Xandar",general,635611
+9,eames@user.com,12345,Michael Eames,"HL street, MN Nagar Porur",general,600004

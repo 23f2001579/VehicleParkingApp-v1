@@ -1,0 +1,9 @@
+id,prime_location_name,price,address,pincode,maximum_spots,active
+1,XP Mall         ,30,"GR street, Velachery, Chennai",600005,8,1
+2,Siva Temple,20,"Ram street, LK nagar, Chennai",600008,15,0
+3,CT Church         ,25,"OLR road, Teynampettai, Chennai",600008,10,1
+4,XP Mall            ,35,"HR street, Velachery, Chennai",600002,12,1
+5,Airport ,40,"ST Road, Puliambakkam, Chennai",600021,10,1
+6,IITM Research Park ,15,"PQ Road, Velachery, Chennai",600001,15,1
+7,Murugan Restaurant,30,"Vel street, Kodambakkam",600007,10,0
+8,Vinayaga Restaurant,35,"Pillayar street, VK nagar, Koyambedu",600001,13,1
