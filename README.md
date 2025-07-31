@@ -44,10 +44,10 @@ In addition to these, several other modules and libraries contribute to the func
 
 ## Database Schema
 
-**User**: Stores details of people using the system. Differentiates between general users and admins.
-**ParkingLot**: Represents each physical parking area. Contains info like location, price, capacity, and address.
-**ParkingSpot**: Represents individual slots within a parking lot. Tracks availability and whether the spot is active.
-**Reservation**: Central table logging all parking activities. Ties together users, lots, and spots. Records time and cost-related details of each booking.
+- **User**: Stores details of people using the system. Differentiates between general users and admins.
+- **ParkingLot**: Represents each physical parking area. Contains info like location, price, capacity, and address.
+- **ParkingSpot**: Represents individual slots within a parking lot. Tracks availability and whether the spot is active.
+- **Reservation**: Central table logging all parking activities. Ties together users, lots, and spots. Records time and cost-related details of each booking.
 
 
 
