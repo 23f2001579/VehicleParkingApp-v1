@@ -2,7 +2,7 @@
 
 ## By: Gowri Shankara Narayanan A
 
-### 23f3004197 | Modern Application Development – I | IIT Madras
+### 23f2001579 | Modern Application Development – I | IIT Madras
 
 ---
 
@@ -94,7 +94,7 @@ In addition to these, several other modules and libraries contribute to the func
 The project follows a modular structure for easy maintainability:
 ```
 .
-├── README.md		- Documentation	
+├── README.md		 - Documentation	
 ├── app.py			- Initializes the flask app 	
 ├── controllers/		- contains controllers for database, models and routes for all pages
 ├── db_init.py			- python script for DB initialisation
