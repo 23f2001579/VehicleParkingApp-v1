@@ -30,24 +30,17 @@ This project is part of the **Modern Application Development - I** course at **I
 
 ## Technologies Used
 
-### Backend:
-- **Flask**: Core framework for routing, request handling, and template rendering.
-- **PyJWT**: For creating and verifying JWT tokens for secure authentication and user session management.
-- **WTForms**: Prevents CSRF attacks by incorporating CSRF tokens.
-- **Requests**: Simplifies API interaction for data sending and receiving.
-- **Flask_SQLAlchemy**: Provides seamless integration with databases.
-- **Flasgger**: For generating and displaying API documentation via Swagger UI.
+- **Flask**: Lightweight Python web framework used to build the web application, handle HTTP routes process requests, and render templates.
+- **Jinja2**:A powerful templating engine used in Flask to dynamically generate HTML pages using Python variables and logic within .html templates.
+- **SQLite3**: A lightweight, file-based relational database used to store data such as users, parking lots, reservations, and more. Ideal for development and smaller-scale apps.
+- **SQLAlchemy**: Python SQL toolkit and ORM for interacting with relational databases in an object-oriented way.
+- **Flask-Login**: Provides session management and user authentication capabilities, including login, logout, and tracking of current user sessions.
+- **Matplotlib**: Used to generate dynamic charts (bar plots, pie charts) for analyzing user behavior and parking lot performance.
 
-### Frontend:
-- **HTML, CSS, JS**: Core technologies used for building the frontend of the application.
-- **Bootstrap 4**: For responsive design with pre-styled components and a flexible grid system.
-- **Chart.js**: For creating interactive, customizable data visualizations.
+- HTML & CSS: Defines the structure and visual presentation of the web pages.
+- Bootstrap 5: A modern CSS framework for responsive design. Helps style forms, buttons, layout, and components efficiently.
 
-### Others:
-- **Flask_CORS**: For enabling Cross-Origin Resource Sharing (CORS).
-- **Flask_Migrate**: For handling database migrations.
-- *and more...*
----
+In addition to these, several other modules and libraries contribute to the functionality and security of this web application.
 
 ## Database Schema
 
@@ -88,14 +81,14 @@ The project follows a modular structure for easy maintainability:
 ## Installation & Setup
 
 ### Requirements:
-- Python 3.8+
+- Python
 - Flask
 - Other dependencies mentioned in `requirements.txt`
 
 ### Setup Instructions:
 1. Clone the repository:
 ```bash
-git clone https://github.com/mynkpdr/mad1project.git
+git clone https://github.com/23f2001579/VehicleParkingApp.git
 cd mad1project
  ```
 2. Create a virtual environment:
@@ -108,15 +101,17 @@ venv\Scripts\activate     # For Windows
 ```bash
 pip install -r requirements.txt
 ```
-4. Run the application:
+4. Create Database:
+```bash
+python db_init.py
+```
+5. Run the application:
 ```bash
 python app.py
 ```
 
 ### Sample Data:
-To populate the database with sample data for testing, you can use the createdb.py script. This script will insert some sample users, services, and other data into the database.
-
-Note*: You need to make sure API is running because it uses API calls to send POST requests.
+To populate the database with sample data for testing, you can use the load_data.py script. This script will insert some sample users, services, and other data into the database.
 
 Run the following command to populate the database:
 ```bash
@@ -124,15 +119,9 @@ python load_data.py
 ```
 The script will automatically add the following sample data:
 
-- An admin user with full access
-- A set of categories.
-- A set of services.
-- A set of professionals.
-- A set of customers.
-- A set of contacts.
-- A set of service requests.
-- A set of notification to admin, professionals and customers.
-- A set of reviews
+- A set of Users.
+- A set of Parking Lots.
+- A set of Parking Spots.
 
 You can modify the createdb.py script to add more sample data as needed.
 
