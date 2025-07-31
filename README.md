@@ -15,76 +15,52 @@ This project is part of the **Modern Application Development - I** course at **I
 
 🚘 1. User Registration and Login
 
-Register with personal details (name, address, etc.).
-
-Secure login with session management using Flask-Login.
-
-Supports admin and general user roles.
+- Register with personal details (name, address, etc.).
+- Secure login with session management using Flask-Login.
+- Supports admin and general user roles.
 
 🅿️ 2. Parking Lot & Spot Management
 
 Admins can:
-
-Create and manage parking lots (location, price, capacity).
-
-Manage individual spots within each lot.
-
-Control status (Available / Reserved) and activation of spots.
+- Create and manage parking lots (location, price, capacity).
+- Manage individual spots within each lot.
+- Control status (Available / Reserved) and activation of spots.
 
 📝 3. Reservation System
 
 Users can:
-
-Book parking spots in available lots.
-
-Provide vehicle number and view real-time availability.
-
-View past reservations.
-
-System auto-calculates:
-
-Parking duration
-
-Cost
+- Book parking spots in available lots.
+- Provide vehicle number and view real-time availability.
+- View past reservations.
+- System auto-calculates:
+- Parking duration
+- Cost
 
 📊 4. User Dashboard & Usage Summary
 
 Personalized user dashboard includes:
-
-Number of bookings
-
-Total time parked
-
-Total cost incurred
-
-Bar charts generated using matplotlib for usage visualization.
+- Number of bookings
+- Total time parked
+- Total cost incurred
+- Bar charts generated using matplotlib for usage visualization.
 
 📈 5. Admin Dashboard & Analytics
 
 Admin has access to:
-
-All user reservations
-
-Revenue summary per lot (pie charts)
-
-High-demand lots and usage trends
+- All user reservations
+- Revenue summary per lot (pie charts)
+- High-demand lots and usage trends
 
 🗃️ 6. Database (SQLite)
 
-Lightweight SQLite database used.
-
-Schema supports foreign keys, relationships, and is easy to migrate.
-
-Data can be backed up or restored easily via CSV or SQL dumps.
+- Lightweight SQLite database used.
+- Schema supports foreign keys, relationships, and is easy to migrate.
+- Data can be backed up or restored easily via CSV or SQL dumps.
 
 🎨 7. Frontend UI
 
-Developed using HTML, CSS, and Bootstrap 5.
-
-Responsive design optimized for desktop and mobile.
-
-Background includes cartoon-style parking visuals for modern aesthetic.
-
+- Developed using HTML, CSS, and Bootstrap 5.
+- Responsive design optimized for desktop and mobile.
 
 ---
 
@@ -120,7 +96,7 @@ The project follows a modular structure for easy maintainability:
 .
 ├── README.md		- Documentation	
 ├── app.py			- Initializes the flask app 	
-├── controllers/			- contains controllers for database, models and routes for all pages
+├── controllers/		- contains controllers for database, models and routes for all pages
 ├── db_init.py			- python script for DB initialisation
 ├── instance/			- contains database
 ├── requirements.txt		- required models and libraries
